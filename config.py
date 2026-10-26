@@ -18,6 +18,10 @@ class Config:
     """Base configuration."""
     SECRET_KEY = os.getenv('SECRET_KEY') or 'dev-only-change-this-key'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_pre_ping': True,
+        'pool_recycle': 300,
+    }
     WTF_CSRF_ENABLED = True
     WTF_CSRF_TIME_LIMIT = 3600
     ITEMS_PER_PAGE = 9
