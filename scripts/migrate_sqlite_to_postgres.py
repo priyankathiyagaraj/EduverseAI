@@ -36,9 +36,12 @@ if not DATABASE_URL or 'sqlite' in DATABASE_URL.lower():
     print(f"  Current value: {DATABASE_URL[:40]}..." if DATABASE_URL else "  Not set.")
     sys.exit(1)
 
-# Fix postgres:// -> postgresql:// for SQLAlchemy
+# Fix postgres:// or postgresql:// -> postgresql+psycopg2:// for SQLAlchemy
 if DATABASE_URL.startswith('postgres://'):
-    DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
+    DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql+psycopg2://', 1)
+    os.environ['DATABASE_URL'] = DATABASE_URL
+elif DATABASE_URL.startswith('postgresql://') and '+psycopg2' not in DATABASE_URL:
+    DATABASE_URL = DATABASE_URL.replace('postgresql://', 'postgresql+psycopg2://', 1)
     os.environ['DATABASE_URL'] = DATABASE_URL
 
 # Find SQLite source
@@ -59,7 +62,7 @@ if not SQLITE_PATH:
     sys.exit(1)
 
 print(f"\n{'='*65}")
-print("  EduVerse AI - Data Migration: SQLite → PostgreSQL")
+print("  EduVerse AI - Data Migration: SQLite -> PostgreSQL")
 print(f"{'='*65}")
 print(f"  Source  : {SQLITE_PATH}")
 print(f"  Target  : {DATABASE_URL[:40]}...")
@@ -95,10 +98,9 @@ from app.models import (
 app = create_app('production')
 
 with app.app_context():
-    print("Running Flask-Migrate (flask db upgrade) against PostgreSQL...")
-    from flask_migrate import upgrade
-    upgrade()
-    print("  ✓ Schema applied to PostgreSQL\n")
+    print("Creating tables in PostgreSQL (db.create_all)...")
+    db.create_all()
+    print("  [OK] Schema applied to PostgreSQL\n")
 
     # --- Helper ---
     def migrate_table(table_name, model_class, transform=None):
@@ -178,7 +180,7 @@ with app.app_context():
             'state': d.get('state', 'Tamil Nadu'),
         }
     migration_results['districts'] = migrate_table('districts', District, transform_district)
-    print(f"  ✓ districts: {migration_results['districts']} inserted")
+    print(f"  âœ“ districts: {migration_results['districts']} inserted")
 
     # 2. Users (passwords already hashed)
     print("Migrating users (passwords remain hashed)...")
@@ -194,7 +196,7 @@ with app.app_context():
             'created_at': parse_dt(u.get('created_at')) or datetime.utcnow(),
         }
     migration_results['users'] = migrate_table('users', User, transform_user)
-    print(f"  ✓ users: {migration_results['users']} inserted")
+    print(f"  âœ“ users: {migration_results['users']} inserted")
 
     # 3. Colleges
     print("Migrating colleges (1129 records)...")
@@ -236,7 +238,7 @@ with app.app_context():
             'created_at': parse_dt(c.get('created_at')) or datetime.utcnow(),
         }
     migration_results['colleges'] = migrate_table('colleges', College, transform_college)
-    print(f"  ✓ colleges: {migration_results['colleges']} inserted")
+    print(f"  âœ“ colleges: {migration_results['colleges']} inserted")
 
     # 4. Courses
     print("Migrating courses (8120 records)...")
@@ -284,7 +286,7 @@ with app.app_context():
             db.session.rollback()
             print(f"    WARNING: Final batch error: {e}")
     migration_results['courses'] = course_inserted
-    print(f"  ✓ courses: {course_inserted} inserted")
+    print(f"  âœ“ courses: {course_inserted} inserted")
 
     # 5. Facilities
     print("Migrating facilities (7938 records)...")
@@ -321,7 +323,7 @@ with app.app_context():
         except Exception as e:
             db.session.rollback()
     migration_results['facilities'] = fac_inserted
-    print(f"  ✓ facilities: {fac_inserted} inserted")
+    print(f"  âœ“ facilities: {fac_inserted} inserted")
 
     # 6. Student Preferences
     print("Migrating student_preferences...")
@@ -341,7 +343,7 @@ with app.app_context():
             'created_at': parse_dt(p.get('created_at')) or datetime.utcnow(),
         }
     migration_results['student_preferences'] = migrate_table('student_preferences', SPModel, transform_pref)
-    print(f"  ✓ student_preferences: {migration_results['student_preferences']} inserted")
+    print(f"  âœ“ student_preferences: {migration_results['student_preferences']} inserted")
 
     # 7. Comparison Items
     print("Migrating comparison_items...")
@@ -355,7 +357,7 @@ with app.app_context():
             'created_at': parse_dt(c.get('created_at')) or datetime.utcnow(),
         }
     migration_results['comparison_items'] = migrate_table('comparison_items', CIModel, transform_ci)
-    print(f"  ✓ comparison_items: {migration_results['comparison_items']} inserted")
+    print(f"  âœ“ comparison_items: {migration_results['comparison_items']} inserted")
 
     # 8. Dataset Metadata
     print("Migrating dataset_metadata...")
@@ -363,14 +365,15 @@ with app.app_context():
     def transform_dm(d):
         return {
             'id': d['id'],
-            'dataset_name': d.get('dataset_name', ''),
-            'source': d.get('source'),
-            'record_count': d.get('record_count'),
-            'last_updated': parse_dt(d.get('last_updated')) or datetime.utcnow(),
+            'dataset_version': d.get('dataset_version', '1.0.0'),
+            'source': d.get('source', ''),
+            'retrieved_at': parse_dt(d.get('retrieved_at')) or datetime.utcnow(),
+            'total_records': d.get('total_records', 0),
+            'verified_records': d.get('verified_records', 0),
             'notes': d.get('notes'),
         }
     migration_results['dataset_metadata'] = migrate_table('dataset_metadata', DMModel, transform_dm)
-    print(f"  ✓ dataset_metadata: {migration_results['dataset_metadata']} inserted")
+    print(f"  [OK] dataset_metadata: {migration_results['dataset_metadata']} inserted")
 
     # 9. Student Profiles
     print("Migrating student_profiles (private)...")
@@ -402,7 +405,7 @@ with app.app_context():
         migration_results['student_profiles'] = prof_inserted
     else:
         migration_results['student_profiles'] = 0
-    print(f"  ✓ student_profiles: {migration_results.get('student_profiles', 0)} inserted")
+    print(f"  âœ“ student_profiles: {migration_results.get('student_profiles', 0)} inserted")
 
     # 10. Student Queries
     print("Migrating student_queries...")
@@ -432,7 +435,7 @@ with app.app_context():
         migration_results['student_queries'] = sq_inserted
     else:
         migration_results['student_queries'] = 0
-    print(f"  ✓ student_queries: {migration_results.get('student_queries', 0)} inserted")
+    print(f"  âœ“ student_queries: {migration_results.get('student_queries', 0)} inserted")
 
     # 11. Student Login Activity
     print("Migrating student_login_activity...")
@@ -462,7 +465,7 @@ with app.app_context():
         migration_results['student_login_activity'] = sla_inserted
     else:
         migration_results['student_login_activity'] = 0
-    print(f"  ✓ student_login_activity: {migration_results.get('student_login_activity', 0)} inserted")
+    print(f"  âœ“ student_login_activity: {migration_results.get('student_login_activity', 0)} inserted")
 
     # 12. Student Feedback
     print("Migrating student_feedback...")
@@ -492,7 +495,17 @@ with app.app_context():
         migration_results['student_feedback'] = sf_inserted
     else:
         migration_results['student_feedback'] = 0
-    print(f"  ✓ student_feedback: {migration_results.get('student_feedback', 0)} inserted")
+    print(f"  âœ“ student_feedback: {migration_results.get('student_feedback', 0)} inserted")
+
+    # Synchronize PostgreSQL primary key sequences
+    print("\nSynchronizing PostgreSQL sequences...")
+    for table in tables:
+        try:
+            db.session.execute(db.text(f"SELECT setval(pg_get_serial_sequence('{table}', 'id'), COALESCE(MAX(id), 1)) FROM \"{table}\""))
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+    print("  âœ“ Sequences synchronized.")
 
     # --- Verification ---
     print(f"\n{'='*65}")
@@ -508,17 +521,18 @@ with app.app_context():
         except Exception:
             dst_count = '?'
 
-        status = '✓' if dst_count == src_count else '⚠'
+        status = 'âœ“' if dst_count == src_count else 'âš '
         if dst_count != src_count:
             all_passed = False
         print(f"  {status} {table}: src={src_count}, dst={dst_count}")
 
     print(f"\n{'='*65}")
     if all_passed:
-        print("  ✓ ALL COUNTS MATCH — Migration complete and verified!")
+        print("  âœ“ ALL COUNTS MATCH â€” Migration complete and verified!")
     else:
-        print("  ⚠ Some counts differ. Check warnings above.")
+        print("  âš  Some counts differ. Check warnings above.")
         print("  Note: Rows already present in dst are counted; re-run is safe.")
     print(f"{'='*65}\n")
 
 src_conn.close()
+

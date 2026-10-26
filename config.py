@@ -33,7 +33,9 @@ class Config:
         explicit_url = os.getenv('DATABASE_URL')
         if explicit_url:
             if explicit_url.startswith("postgres://"):
-                explicit_url = explicit_url.replace("postgres://", "postgresql://", 1)
+                explicit_url = explicit_url.replace("postgres://", "postgresql+psycopg2://", 1)
+            elif explicit_url.startswith("postgresql://") and "+psycopg2" not in explicit_url:
+                explicit_url = explicit_url.replace("postgresql://", "postgresql+psycopg2://", 1)
             return explicit_url
 
         mysql_user = os.getenv('MYSQL_USER')
