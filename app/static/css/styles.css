@@ -1,0 +1,243 @@
+/* ==========================================================================
+   EduVerse AI – Premium SaaS Design System & Accessibility Styling
+   Color Palette:
+     - Main Background: #F8FAFC (Slate 50)
+     - Primary Dark Blue: #1E3A8A (Blue 900)
+     - Secondary Blue: #2563EB (Blue 600)
+     - Soft Blue Section: #EFF6FF (Blue 50)
+     - White Card: #FFFFFF
+     - Primary Text: #0F172A (Slate 900)
+     - Secondary Text: #64748B (Slate 500)
+     - Borders: #E2E8F0 (Slate 200)
+     - Subtle Accent: #14B8A6 (Teal 500)
+   ========================================================================== */
+
+:root {
+    --bg-main: #F8FAFC;
+    --primary-dark: #1E3A8A;
+    --secondary-blue: #2563EB;
+    --section-soft: #EFF6FF;
+    --card-bg: #FFFFFF;
+    --text-primary: #0F172A;
+    --text-secondary: #64748B;
+    --border-color: #E2E8F0;
+    --border-hover: #CBD5E1;
+    --accent-teal: #14B8A6;
+    --accent-teal-soft: #F0FDFA;
+    --shadow-soft: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+    --shadow-hover: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+}
+
+/* Base Body Styles */
+html, body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    overflow-x: hidden;
+}
+
+/* Focus Visibility for Keyboard Accessibility */
+:focus-visible {
+    outline: 2px solid var(--secondary-blue) !important;
+    outline-offset: 2px !important;
+}
+
+/* Custom Accessible Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #F1F5F9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}
+
+/* Responsive Table Wrapper with Horizontal Touch Scroll */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+}
+
+/* Sticky first column for side-by-side comparison tables on mobile */
+@media (max-width: 767px) {
+    .table-sticky-col th:first-child,
+    .table-sticky-col td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 10;
+        background-color: #F8FAFC;
+        box-shadow: 2px 0 5px -2px rgba(15, 23, 42, 0.1);
+    }
+}
+
+/* Touch targets and mobile form accessibility */
+@media (max-width: 640px) {
+    input, select, textarea, button {
+        font-size: 16px !important; /* Prevents iOS auto-zoom on input focus */
+    }
+
+    .touch-target {
+        min-height: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* Safe area insets for modern mobile displays */
+.safe-bottom {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+/* Floating AI Counselor mobile position adjustment */
+@media (max-width: 640px) {
+    #ai-counselor-widget {
+        bottom: 1rem !important;
+        left: 1rem !important;
+    }
+    #ai-counselor-toggle-btn {
+        padding: 0.5rem 0.85rem !important;
+        font-size: 0.8125rem !important;
+    }
+}
+
+/* Collapsible Filter Panel Transitions */
+.filter-collapse-transition {
+    transition: max-height 0.3s ease-in-out, opacity 0.25s ease-in-out;
+}
+
+/* Hide scrollbars for pill bars while allowing horizontal scrolling */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Reusable SaaS Card Classes */
+.card-saas {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-soft);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-saas-hover:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-1px);
+}
+
+/* Equal Height Grid Card Helper */
+.card-flex {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+/* Input Fields with Clean White Background & Visible Borders */
+.input-saas {
+    background-color: #FFFFFF;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 0.75rem;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input-saas:focus {
+    outline: none;
+    border-color: var(--secondary-blue);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--secondary-blue);
+    color: #FFFFFF;
+    font-weight: 600;
+    border-radius: 0.75rem;
+    padding: 0.625rem 1.25rem;
+    box-shadow: 0 1px 2px 0 rgba(37, 99, 235, 0.2);
+    transition: all 0.15s ease;
+}
+
+.btn-primary:hover {
+    background-color: #1D4ED8;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.25);
+}
+
+.btn-secondary {
+    background-color: #FFFFFF;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-weight: 600;
+    border-radius: 0.75rem;
+    padding: 0.625rem 1.25rem;
+    box-shadow: var(--shadow-soft);
+    transition: all 0.15s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #F8FAFC;
+    border-color: var(--border-hover);
+    color: #1E3A8A;
+}
+
+/* Badges & Tags */
+.badge-teal {
+    background-color: #F0FDFA;
+    color: #0D9488;
+    border: 1px solid #CCFBF1;
+    font-weight: 600;
+}
+
+.badge-blue {
+    background-color: #EFF6FF;
+    color: #1D4ED8;
+    border: 1px solid #DBEAFE;
+    font-weight: 600;
+}
+
+.badge-navy {
+    background-color: #EFF6FF;
+    color: #1E3A8A;
+    border: 1px solid #BFDBFE;
+    font-weight: 600;
+}
+
+/* Soft Blue Section */
+.section-soft-blue {
+    background-color: var(--section-soft);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Text Wrapping and Overflow Protection */
+.break-words-wrap {
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+/* Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

@@ -1,0 +1,10 @@
+{% set border_color = 'border-emerald-200 bg-emerald-50 text-emerald-800' if type == 'success' else 'border-rose-200 bg-rose-50 text-rose-800' if type == 'error' else 'border-amber-200 bg-amber-50 text-amber-800' if type == 'warning' else 'border-indigo-200 bg-indigo-50 text-indigo-800' %}
+<div class="p-4 rounded-2xl border {{ border_color }} flex items-start space-x-3 text-xs leading-relaxed" role="alert">
+    <div class="flex-grow">
+        {% if title %}<strong class="font-bold block mb-0.5">{{ title }}</strong>{% endif %}
+        <span>{{ message }}</span>
+    </div>
+    {% if dismissible %}
+        <button type="button" onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600 ml-2" aria-label="Dismiss alert">&times;</button>
+    {% endif %}
+</div>

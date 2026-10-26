@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}403 - Access Forbidden | EduVerse AI{% endblock %}
+
+{% block content %}
+<div class="min-h-[60vh] flex items-center justify-center py-16 px-4">
+    <div class="text-center max-w-md">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-amber-50 text-amber-600 mb-6 font-bold text-2xl">
+            403
+        </div>
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Access Restricted</h1>
+        <p class="text-sm text-slate-600 mt-3 leading-relaxed">
+            You do not have administrative privileges to access this area. Please sign in with an administrator account.
+        </p>
+        <div class="mt-8 flex justify-center space-x-3">
+            <a href="{{ url_for('main.index') }}" class="px-5 py-2.5 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 transition">
+                Return Home
+            </a>
+            <a href="{{ url_for('auth.login_page') }}" class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition">
+                Admin Sign In
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

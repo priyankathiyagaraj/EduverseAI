@@ -1,0 +1,598 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard & Student Analytics | EduVerse AI{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <!-- Admin Header -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between pb-6 border-b border-slate-200 gap-4">
+        <div>
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-xs font-semibold text-blue-700 mb-2 shadow-2xs">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+                <span>Institutional & Student Analytics Console</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-[#1E3A8A] tracking-tight">Admin Dashboard</h1>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1">Real-time student authentication tracking, engagement analytics, feedback ratings, and institutional governance.</p>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <a href="{{ url_for('admin.admin_queries') }}" class="px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 transition flex items-center space-x-2 shadow-2xs">
+                <span>💬 Feedback & Queries</span>
+                {% if student_stats.pending_queries > 0 %}
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500 text-white">
+                        🔴 {{ student_stats.pending_queries }}
+                    </span>
+                {% endif %}
+            </a>
+            <a href="{{ url_for('admin.new_college') }}" class="px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-blue-600 hover:bg-blue-700 text-white shadow-2xs transition flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                <span>Add New College</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- 1. STUDENT OVERVIEW SECTION (6 DYNAMIC REAL-DATABASE CARDS) -->
+    <!-- ============================================================== -->
+    <div class="space-y-3">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <span class="text-sm font-bold uppercase tracking-wider text-slate-700">Student Overview</span>
+                <span class="text-[10px] text-slate-400 font-mono">(Live Database Metrics)</span>
+            </div>
+            <span class="text-[11px] text-slate-400">Inactivity timeout: {{ student_stats.inactivity_timeout_minutes }} min</span>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+            <!-- 1. Total Students -->
+            <div class="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm transition hover:border-indigo-300">
+                <div class="flex items-center justify-between text-slate-500">
+                    <span class="text-xs font-bold uppercase tracking-wider">👨‍🎓 Total Students</span>
+                </div>
+                <div class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2" id="kpi-total-students">
+                    {{ student_stats.total_students }}
+                </div>
+                <span class="text-[10px] text-slate-400 mt-1 block">Registered student accounts</span>
+            </div>
+
+            <!-- 2. Active Students -->
+            <div class="p-3.5 sm:p-5 rounded-2xl bg-white border border-emerald-200 bg-emerald-50/20 shadow-sm transition hover:border-emerald-300">
+                <div class="flex items-center justify-between text-emerald-700">
+                    <span class="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Active Students
+                    </span>
+                </div>
+                <div class="text-xl sm:text-2xl font-extrabold text-emerald-600 mt-2" id="kpi-active-students">
+                    {{ student_stats.active_students }}
+                </div>
+                <span class="text-[10px] text-emerald-700/80 mt-1 block">Active in last {{ student_stats.inactivity_timeout_minutes }}m</span>
+            </div>
+
+            <!-- 3. Total Logins -->
+            <div class="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm transition hover:border-indigo-300">
+                <div class="flex items-center justify-between text-slate-500">
+                    <span class="text-xs font-bold uppercase tracking-wider">🔐 Total Logins</span>
+                </div>
+                <div class="text-xl sm:text-2xl font-extrabold text-indigo-600 mt-2" id="kpi-total-logins">
+                    {{ student_stats.total_logins }}
+                </div>
+                <span class="text-[10px] text-slate-400 mt-1 block">
+                    Today: {{ student_stats.today_logins }} | 7d: {{ student_stats.week_logins }}
+                </span>
+            </div>
+
+            <!-- 4. Total Feedback -->
+            <a href="{{ url_for('admin.admin_queries', tab='feedback') }}" class="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm transition hover:border-amber-400 group">
+                <div class="flex items-center justify-between text-slate-500 group-hover:text-amber-600">
+                    <span class="text-xs font-bold uppercase tracking-wider">💬 Total Feedback</span>
+                </div>
+                <div class="text-xl sm:text-2xl font-extrabold text-amber-500 mt-2 flex items-center justify-between">
+                    <span>{{ student_stats.total_feedback }}</span>
+                    {% if feedback_stats.avg_rating > 0 %}
+                        <span class="text-xs font-bold text-amber-600 px-2 py-0.5 rounded-full bg-amber-50">
+                            {{ feedback_stats.avg_rating }} ★
+                        </span>
+                    {% endif %}
+                </div>
+                <span class="text-[10px] text-slate-400 mt-1 block group-hover:text-amber-700">Click to view ratings</span>
+            </a>
+
+            <!-- 5. Pending Queries -->
+            <a href="{{ url_for('admin.admin_queries', status='PENDING') }}" class="p-3.5 sm:p-5 rounded-2xl border transition shadow-sm {{ 'bg-rose-50 border-rose-300 ring-2 ring-rose-400' if student_stats.pending_queries > 0 else 'bg-white border-slate-200 hover:border-rose-300' }}">
+                <div class="flex items-center justify-between {{ 'text-rose-600' if student_stats.pending_queries > 0 else 'text-slate-500' }}">
+                    <span class="text-xs font-bold uppercase tracking-wider">⏳ Pending Queries</span>
+                </div>
+                <div class="text-xl sm:text-2xl font-extrabold mt-2 flex items-center justify-between {{ 'text-rose-700' if student_stats.pending_queries > 0 else 'text-slate-900' }}">
+                    <span>{{ student_stats.pending_queries }}</span>
+                    {% if student_stats.pending_queries > 0 %}
+                        <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-rose-500 text-white">Action Req</span>
+                    {% endif %}
+                </div>
+                <span class="text-[10px] {{ 'text-rose-600 font-semibold' if student_stats.pending_queries > 0 else 'text-slate-400' }} mt-1 block">Awaiting response</span>
+            </a>
+
+            <!-- 6. Resolved Queries -->
+            <a href="{{ url_for('admin.admin_queries', status='RESOLVED') }}" class="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-sm transition hover:border-emerald-300">
+                <div class="flex items-center justify-between text-slate-500">
+                    <span class="text-xs font-bold uppercase tracking-wider">✅ Resolved Queries</span>
+                </div>
+                <div class="text-xl sm:text-2xl font-extrabold text-emerald-600 mt-2">
+                    {{ student_stats.resolved_queries }}
+                </div>
+                <span class="text-[10px] text-slate-400 mt-1 block">Completed inquiries</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- 2. LOGIN ACTIVITY CHART & FEEDBACK RATINGS BREAKDOWN -->
+    <!-- ============================================================== -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Student Login Activity Real Database Chart -->
+        <div class="lg:col-span-2 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-100">
+                <div>
+                    <h2 class="text-base font-bold text-slate-900 flex items-center space-x-2">
+                        <span>Student Login Activity</span>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-50 text-indigo-700">Real Database</span>
+                    </h2>
+                    <p class="text-xs text-slate-500">Frequency of student authentications tracked via student_login_activity.</p>
+                </div>
+
+                <!-- Timeframe Switcher -->
+                <div class="inline-flex rounded-xl bg-slate-100 p-1 text-xs font-semibold text-slate-600 self-start sm:self-auto">
+                    <button type="button" class="chart-tab-btn px-3 py-1.5 rounded-lg transition hover:text-slate-900" data-timeframe="today">Today</button>
+                    <button type="button" class="chart-tab-btn px-3 py-1.5 rounded-lg transition bg-white text-indigo-600 shadow-sm" data-timeframe="7d">Last 7 Days</button>
+                    <button type="button" class="chart-tab-btn px-3 py-1.5 rounded-lg transition hover:text-slate-900" data-timeframe="30d">Last 30 Days</button>
+                </div>
+            </div>
+
+            <!-- Chart Container -->
+            <div class="h-64 sm:h-72 w-full relative">
+                <canvas id="studentLoginChart"></canvas>
+            </div>
+            <div class="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
+                <span>Total logins in selected range: <strong id="chart-total-count" class="text-slate-900">{{ login_chart.total }}</strong></span>
+                <span class="text-[11px] text-slate-400">Zero fake numbers &bull; Real database count</span>
+            </div>
+        </div>
+
+        <!-- Student Feedback & Star Distribution -->
+        <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+            <div class="pb-3 border-b border-slate-100 flex items-center justify-between">
+                <div>
+                    <h2 class="text-base font-bold text-slate-900">Student Feedback</h2>
+                    <p class="text-xs text-slate-500">Rating distribution from About Us.</p>
+                </div>
+                <a href="{{ url_for('admin.admin_queries', tab='feedback') }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800">
+                    View All &rarr;
+                </a>
+            </div>
+
+            <!-- Average Rating Hero -->
+            <div class="text-center p-4 rounded-2xl bg-amber-50/50 border border-amber-200">
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Average Platform Rating</span>
+                <div class="text-4xl font-extrabold text-amber-500 mt-1 flex items-center justify-center space-x-1.5">
+                    <span>{{ feedback_stats.avg_rating }}</span>
+                    <span class="text-2xl">★</span>
+                </div>
+                <span class="text-xs text-slate-500 mt-1 block">Based on {{ feedback_stats.total_feedback }} student reviews</span>
+            </div>
+
+            <!-- Star Bars 5 to 1 -->
+            <div class="space-y-2 pt-2 text-xs">
+                {% for star in [5, 4, 3, 2, 1] %}
+                    <div class="flex items-center space-x-3">
+                        <span class="w-12 font-medium text-slate-600 shrink-0">{{ star }} Star</span>
+                        <div class="flex-1 h-3 rounded-full bg-slate-100 overflow-hidden">
+                            <div class="h-full bg-amber-400 rounded-full transition-all duration-500" style="width: {{ feedback_stats.star_percentages.get(star, 0) }}%"></div>
+                        </div>
+                        <span class="w-12 text-right font-mono text-slate-500 shrink-0">
+                            {{ feedback_stats.star_counts.get(star, 0) }}
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- 3. RECENT ACTIVITY SPLIT: FEEDBACK & INQUIRIES -->
+    <!-- ============================================================== -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Recent Student Feedback Table -->
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between">
+            <div>
+                <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">Recent Student Feedback</h2>
+                        <p class="text-xs text-slate-500">Latest student reviews and ratings.</p>
+                    </div>
+                    <a href="{{ url_for('admin.admin_queries', tab='feedback') }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800">
+                        View All ({{ feedback_stats.total_feedback }}) &rarr;
+                    </a>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-100 bg-slate-50/70 text-slate-500 uppercase tracking-wider font-bold">
+                                <th class="p-4">Student</th>
+                                <th class="p-4">Rating</th>
+                                <th class="p-4">Feedback</th>
+                                <th class="p-4 text-right">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            {% if recent_feedback and recent_feedback|length > 0 %}
+                                {% for fb in recent_feedback %}
+                                    <tr class="hover:bg-slate-50/80 transition">
+                                        <td class="p-4 font-semibold text-slate-900">
+                                            {{ fb.student_name }}
+                                            {% if fb.email %}
+                                                <span class="block text-[10px] text-slate-400 font-mono">{{ fb.email }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="p-4">
+                                            <span class="text-amber-500 font-bold text-sm tracking-tighter">
+                                                {% for _ in range(fb.rating) %}★{% endfor %}
+                                            </span>
+                                            <span class="text-[10px] text-slate-400 ml-1">({{ fb.rating }}/5)</span>
+                                        </td>
+                                        <td class="p-4 text-slate-600 max-w-xs">
+                                            {% if fb.feedback_message %}
+                                                <p class="line-clamp-2 italic">"{{ fb.feedback_message }}"</p>
+                                            {% else %}
+                                                <span class="text-slate-400 italic">No written comment</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="p-4 text-right text-slate-400 whitespace-nowrap">
+                                            {{ fb.created_at.strftime('%b %d') }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="p-8 text-center text-slate-400 italic">
+                                        No student feedback submitted yet.
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="p-4 bg-slate-50 border-t border-slate-100 text-right">
+                <a href="{{ url_for('admin.admin_queries', tab='feedback') }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800">
+                    Manage All Feedback Submissions &rarr;
+                </a>
+            </div>
+        </div>
+
+        <!-- Recent Queries Table -->
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between">
+            <div>
+                <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">Recent Student Inquiries</h2>
+                        <p class="text-xs text-slate-500">Inquiries submitted via About Us helpdesk.</p>
+                    </div>
+                    <a href="{{ url_for('admin.admin_queries', tab='queries') }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800">
+                        View All ({{ student_stats.total_queries }}) &rarr;
+                    </a>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-100 bg-slate-50/70 text-slate-500 uppercase tracking-wider font-bold">
+                                <th class="p-4">Student</th>
+                                <th class="p-4">Category</th>
+                                <th class="p-4">Status</th>
+                                <th class="p-4 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            {% if stats.recent_queries and stats.recent_queries|length > 0 %}
+                                {% for rq in stats.recent_queries %}
+                                    <tr class="hover:bg-slate-50/80 transition">
+                                        <td class="p-4 font-semibold text-slate-900">
+                                            {{ rq.student_name }}
+                                            <span class="block text-[10px] text-slate-400 font-mono">{{ rq.email }}</span>
+                                        </td>
+                                        <td class="p-4">
+                                            <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-50 text-indigo-700">
+                                                {{ rq.category }}
+                                            </span>
+                                        </td>
+                                        <td class="p-4">
+                                            {% if rq.status == 'PENDING' %}
+                                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800">PENDING</span>
+                                            {% elif rq.status == 'IN_PROGRESS' %}
+                                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">IN PROGRESS</span>
+                                            {% elif rq.status == 'RESOLVED' %}
+                                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">RESOLVED</span>
+                                            {% else %}
+                                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">{{ rq.status }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="p-4 text-right">
+                                            <a href="{{ url_for('admin.admin_queries', q=rq.email) }}" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition">
+                                                Respond &rarr;
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="p-8 text-center text-slate-400 italic">
+                                        No student queries submitted yet.
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="p-4 bg-slate-50 border-t border-slate-100 text-right">
+                <a href="{{ url_for('admin.admin_queries', tab='queries') }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800">
+                    Open Query Management Console &rarr;
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- 4. INSTITUTIONAL DIRECTORY & MANAGEMENT TABLE -->
+    <!-- ============================================================== -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden space-y-4">
+        <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <h2 class="text-base font-bold text-slate-900">Institutional Directory</h2>
+                <p class="text-xs text-slate-500">Manage all 1,129 higher education institutions across 38 districts of Tamil Nadu.</p>
+            </div>
+            <!-- Quick Filter -->
+            <form action="{{ url_for('admin.dashboard') }}" method="GET" class="flex items-center gap-2">
+                <input type="text" name="q" value="{{ search_query or '' }}" placeholder="Search by name, district, or code..." class="px-3 py-1.5 text-xs rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 w-64">
+                <button type="submit" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition">Filter</button>
+            </form>
+        </div>
+
+        <!-- Institutional Stats Strip -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 px-6 pt-2">
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
+                <span class="text-[10px] font-bold uppercase text-slate-400">Total Colleges</span>
+                <div class="text-lg font-extrabold text-slate-900">{{ stats.total_colleges }}</div>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
+                <span class="text-[10px] font-bold uppercase text-slate-400">Total Courses</span>
+                <div class="text-lg font-extrabold text-indigo-600">{{ stats.total_courses }}</div>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
+                <span class="text-[10px] font-bold uppercase text-slate-400">Verified Data</span>
+                <div class="text-lg font-extrabold text-emerald-600">{{ stats.verified_count }}</div>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
+                <span class="text-[10px] font-bold uppercase text-slate-400">Verified Websites</span>
+                <div class="text-lg font-extrabold text-blue-600">{{ stats.verified_website_count }}</div>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                    <tr class="border-b border-slate-200 bg-slate-50/70 text-slate-500 uppercase tracking-wider font-bold">
+                        <th class="p-4">ID</th>
+                        <th class="p-4">Institution Name</th>
+                        <th class="p-4">Location</th>
+                        <th class="p-4">Type</th>
+                        <th class="p-4">Status</th>
+                        <th class="p-4">Official Website</th>
+                        <th class="p-4">Coordinates</th>
+                        <th class="p-4 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for c in colleges %}
+                        <tr class="hover:bg-slate-50/80 transition">
+                            <td class="p-4 font-mono text-slate-400">#{{ c.id }}</td>
+                            <td class="p-4 font-semibold text-slate-900">
+                                <a href="{{ url_for('colleges.college_detail', id=c.id) }}" class="hover:text-indigo-600">
+                                    {{ c.name }}
+                                </a>
+                                {% if c.code %}
+                                    <span class="block text-[10px] text-slate-400 font-mono">Code: {{ c.code }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="p-4 text-slate-600">
+                                {{ c.city }}, {{ c.district }}
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2 py-0.5 rounded text-[11px] bg-indigo-50 text-indigo-700 font-medium">
+                                    {{ c.college_type }}
+                                </span>
+                            </td>
+                            <td class="p-4">
+                                {% with status=c.data_status %}
+                                    {% include 'components/data_status_badge.html' %}
+                                {% endwith %}
+                            </td>
+                            <td class="p-4">
+                                {% if c.official_website_url %}
+                                    <div class="flex items-center space-x-1.5">
+                                        <a href="{{ c.official_website_url }}" target="_blank" rel="noopener noreferrer" class="font-medium text-indigo-600 hover:underline flex items-center gap-1">
+                                            <span>Visit</span>
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                        </a>
+                                        <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800">VERIFIED</span>
+                                    </div>
+                                {% elif c.website_status == 'BROKEN' %}
+                                    <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-100 text-rose-700">BROKEN</span>
+                                {% else %}
+                                    <span class="text-slate-400 italic text-[11px]">Missing</span>
+                                {% endif %}
+                            </td>
+                            <td class="p-4">
+                                {% if c.has_valid_coordinates %}
+                                    <span class="text-emerald-600 font-medium">✓ {{ "%.2f"|format(c.latitude) }}, {{ "%.2f"|format(c.longitude) }}</span>
+                                {% else %}
+                                    <span class="text-slate-400 italic">None</span>
+                                {% endif %}
+                            </td>
+                            <td class="p-4 text-right space-x-2">
+                                <a href="{{ url_for('admin.edit_college', id=c.id) }}" class="px-2.5 py-1 rounded-lg text-indigo-600 hover:bg-indigo-50 font-semibold transition">
+                                    Edit
+                                </a>
+                                <form action="{{ url_for('admin.delete_college', id=c.id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete \'{{ c.name|replace("'", "\\'") }}\'? This will cascade delete its courses and facilities.');">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="px-2.5 py-1 rounded-lg text-rose-600 hover:bg-rose-50 font-semibold transition">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if pagination.pages > 1 %}
+            <div class="p-6 border-t border-slate-100 flex items-center justify-between">
+                <span class="text-xs text-slate-500">
+                    Page {{ pagination.page }} of {{ pagination.pages }}
+                </span>
+                <div class="flex space-x-2">
+                    {% if pagination.has_prev %}
+                        <a href="{{ url_for('admin.dashboard', page=pagination.prev_num, q=search_query) }}" class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold hover:bg-slate-50">
+                            &larr; Prev
+                        </a>
+                    {% endif %}
+                    {% if pagination.has_next %}
+                        <a href="{{ url_for('admin.dashboard', page=pagination.next_num, q=search_query) }}" class="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold hover:bg-slate-50">
+                            Next &rarr;
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // -------------------------------------------------------------
+    // Student Login Activity Chart.js Initialization
+    // -------------------------------------------------------------
+    let loginChart = null;
+    const initialChartData = {{ login_chart|tojson }};
+
+    function renderLoginChart(labels, data) {
+        const ctx = document.getElementById('studentLoginChart');
+        if (!ctx) return;
+
+        if (loginChart) {
+            loginChart.destroy();
+        }
+
+        loginChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Student Logins',
+                    data: data,
+                    borderColor: '#4f46e5',
+                    backgroundColor: 'rgba(79, 70, 229, 0.08)',
+                    borderWidth: 2.5,
+                    fill: true,
+                    tension: 0.35,
+                    pointBackgroundColor: '#4f46e5',
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1e293b',
+                        padding: 10,
+                        titleFont: { size: 12, weight: 'bold' },
+                        bodyFont: { size: 12 },
+                        callbacks: {
+                            label: function(context) {
+                                return ` Logins: ${context.parsed.y}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0,
+                            font: { size: 11 },
+                            color: '#94a3b8'
+                        },
+                        grid: {
+                            color: '#f1f5f9'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: { size: 11 },
+                            color: '#94a3b8',
+                            maxRotation: 45
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Initial render
+    if (initialChartData) {
+        renderLoginChart(initialChartData.labels, initialChartData.data);
+    }
+
+    // Tab buttons handling
+    const tabBtns = document.querySelectorAll('.chart-tab-btn');
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const timeframe = btn.getAttribute('data-timeframe');
+
+            // Style toggle
+            tabBtns.forEach(b => {
+                b.classList.remove('bg-white', 'text-indigo-600', 'shadow-sm');
+                b.classList.add('hover:text-slate-900');
+            });
+            btn.classList.add('bg-white', 'text-indigo-600', 'shadow-sm');
+            btn.classList.remove('hover:text-slate-900');
+
+            try {
+                const res = await fetch(`/api/admin/analytics/logins?timeframe=${timeframe}`);
+                const data = await res.json();
+                if (data.success && data.chart) {
+                    renderLoginChart(data.chart.labels, data.chart.data);
+                    const totalEl = document.getElementById('chart-total-count');
+                    if (totalEl) totalEl.textContent = data.chart.total;
+                }
+            } catch (err) {
+                console.error("Failed to load chart data:", err);
+            }
+        });
+    });
+</script>
+{% endblock %}

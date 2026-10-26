@@ -1,0 +1,16 @@
+<div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-2xs space-y-6">
+    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center space-x-2">
+            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+            </svg>
+            <span>{{ title or "Refine Results" }}</span>
+        </h3>
+        <button type="button" onclick="resetFilters()" class="text-xs text-blue-600 hover:text-blue-800 font-semibold cursor-pointer">
+            Reset
+        </button>
+    </div>
+    <div class="space-y-4">
+        {{ caller() if caller else '' }}
+    </div>
+</div>

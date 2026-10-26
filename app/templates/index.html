@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+
+{% block title %}EduVerse AI - Discover, Compare & Choose Your College in Tamil Nadu{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative overflow-hidden bg-gradient-to-b from-blue-50/60 via-slate-50 to-[#F8FAFC] py-16 sm:py-24 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="text-center max-w-3xl mx-auto space-y-6">
+            <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-xs font-semibold text-blue-700 shadow-2xs">
+                <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+                <span>Tamil Nadu Higher Education Discovery Platform</span>
+            </div>
+
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
+                Discover. Compare. <br class="hidden sm:inline" />
+                <span class="text-[#1E3A8A]">Choose Your Educational Path.</span>
+            </h1>
+
+            <p class="text-lg sm:text-xl text-slate-600 leading-relaxed font-normal">
+                Your smart guide for course, college, and career decisions. Calculate your official TNEA cutoff, explore verified Tamil Nadu colleges, and chat with your AI education counselor.
+            </p>
+
+            <!-- Quick Action CTAs -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-3">
+                <a href="{{ url_for('student.assessment') }}" class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md shadow-blue-500/15 transition-all text-center flex items-center justify-center space-x-2">
+                    <span>🎯 12th Course & Cutoff Guide</span>
+                </a>
+                <a href="{{ url_for('colleges.explore') }}" class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white text-slate-800 font-semibold border border-slate-300 hover:bg-slate-50 hover:border-slate-400 shadow-2xs transition-all text-center flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <span>Explore Colleges</span>
+                </a>
+                <a href="{{ url_for('student.careers') }}" class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-teal-50 text-teal-800 font-semibold border border-teal-200/80 hover:bg-teal-100/80 transition-all text-center flex items-center justify-center space-x-2">
+                    <span>🚀 Career Pathways</span>
+                </a>
+            </div>
+
+            <!-- Quick Search Bar -->
+            <form action="{{ url_for('colleges.explore') }}" method="GET" class="mt-8 max-w-2xl mx-auto">
+                <div class="p-2 bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col sm:flex-row items-center gap-2">
+                    <div class="flex-grow flex items-center px-3.5 w-full">
+                        <svg class="w-5 h-5 text-slate-400 mr-2.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <input type="text" name="q" placeholder="Search by college name, course (e.g. MCA, MBA, B.Tech), or city..." class="w-full py-2 bg-transparent text-sm text-slate-900 focus:outline-none placeholder-slate-400">
+                    </div>
+                    <button type="submit" class="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition shadow-2xs cursor-pointer">
+                        Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Live Platform Statistics Section -->
+<section class="py-12 bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-8">
+            <h2 class="text-xs font-bold tracking-wider text-slate-400 uppercase">Real-Time Database Coverage</h2>
+            <p class="text-xs text-slate-500 mt-1">Live metrics queried directly from the connected college database</p>
+        </div>
+
+        <div id="stats-container" class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
+            <div class="p-4 sm:p-6 rounded-2xl bg-slate-50/80 border border-slate-200 text-center hover:bg-white hover:shadow-xs transition">
+                <div id="stat-colleges" class="text-2xl sm:text-3xl font-extrabold text-slate-900">—</div>
+                <div class="text-[11px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1">Colleges Indexed</div>
+            </div>
+            <div class="p-4 sm:p-6 rounded-2xl bg-slate-50/80 border border-slate-200 text-center hover:bg-white hover:shadow-xs transition">
+                <div id="stat-courses" class="text-2xl sm:text-3xl font-extrabold text-blue-600">—</div>
+                <div class="text-[11px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1">Courses Cataloged</div>
+            </div>
+            <div class="p-4 sm:p-6 rounded-2xl bg-slate-50/80 border border-slate-200 text-center hover:bg-white hover:shadow-xs transition">
+                <div id="stat-districts" class="text-2xl sm:text-3xl font-extrabold text-slate-900">—</div>
+                <div class="text-[11px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1">Districts Covered</div>
+            </div>
+            <div class="p-4 sm:p-6 rounded-2xl bg-slate-50/80 border border-slate-200 text-center hover:bg-white hover:shadow-xs transition">
+                <div id="stat-status" class="text-2xl sm:text-3xl font-extrabold text-teal-600">—</div>
+                <div class="text-[11px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1">Transparency Index</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Core Platform Features -->
+<section class="py-16 bg-[#F8FAFC] border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-14">
+            <h2 class="text-xs uppercase font-bold text-blue-600 tracking-wider">Features</h2>
+            <p class="text-3xl font-extrabold text-slate-900 mt-2">Engineered for Academic Clarity</p>
+            <p class="text-slate-600 mt-3 text-sm">Addressing scattered college data and opaque admission information with structured decision-support tools.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="h-full p-8 rounded-2xl bg-white border border-slate-200 shadow-xs hover:shadow-md hover:border-blue-200 transition-all duration-200 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">Multi-Parametric Search</h3>
+                    <p class="text-sm text-slate-600 mt-2.5 leading-relaxed">
+                        Filter across courses (MCA, MBA, B.Tech), districts, cities, maximum annual fee limits, college types, and campus facilities.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="h-full p-8 rounded-2xl bg-white border border-slate-200 shadow-xs hover:shadow-md hover:border-blue-200 transition-all duration-200 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">Side-by-Side Comparison</h3>
+                    <p class="text-sm text-slate-600 mt-2.5 leading-relaxed">
+                        Compare 2 to 4 colleges simultaneously in a clean matrix. View factual differences in fees, courses, facilities, and data sources without biased ranking gimmicks.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="h-full p-8 rounded-2xl bg-white border border-slate-200 shadow-xs hover:shadow-md hover:border-blue-200 transition-all duration-200 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900">Explainable AI Recommender</h3>
+                    <p class="text-sm text-slate-600 mt-2.5 leading-relaxed">
+                        Content-based multi-criteria scoring algorithm that matches your academic goals, budget, and location preferences with explicit breakdown of match factors.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-16 bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-14">
+            <h2 class="text-xs uppercase font-bold text-blue-600 tracking-wider">Workflow</h2>
+            <p class="text-3xl font-extrabold text-slate-900 mt-2">How EduVerse AI Works</p>
+            <p class="text-slate-600 mt-3 text-sm">Four straightforward steps to an informed educational decision.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="h-full p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center flex flex-col justify-between">
+                <div>
+                    <div class="w-10 h-10 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center mx-auto mb-4 text-sm shadow-xs">1</div>
+                    <h4 class="font-bold text-slate-900 text-base">Input Preferences</h4>
+                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">Choose your target course, district or city, budget ceiling, and desired campus facilities.</p>
+                </div>
+            </div>
+
+            <div class="h-full p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center flex flex-col justify-between">
+                <div>
+                    <div class="w-10 h-10 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center mx-auto mb-4 text-sm shadow-xs">2</div>
+                    <h4 class="font-bold text-slate-900 text-base">Algorithmic Scoring</h4>
+                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">Our engine evaluates course fit, location distance, budget compliance, and amenity coverage.</p>
+                </div>
+            </div>
+
+            <div class="h-full p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center flex flex-col justify-between">
+                <div>
+                    <div class="w-10 h-10 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center mx-auto mb-4 text-sm shadow-xs">3</div>
+                    <h4 class="font-bold text-slate-900 text-base">Inspect Match Factors</h4>
+                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">Review transparent percentages and exact checkmarks explaining why each college was suggested.</p>
+                </div>
+            </div>
+
+            <div class="h-full p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center flex flex-col justify-between">
+                <div>
+                    <div class="w-10 h-10 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center mx-auto mb-4 text-sm shadow-xs">4</div>
+                    <h4 class="font-bold text-slate-900 text-base">Compare & Decide</h4>
+                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">Select top contenders into the side-by-side matrix and verify with official institution links.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Data Quality Transparency Section (Soft Blue SaaS Style) -->
+<section class="py-16 bg-[#EFF6FF] border-b border-blue-100 text-slate-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center space-y-6">
+            <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white text-teal-700 text-xs font-semibold border border-teal-200 shadow-2xs">
+                <svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+                <span>Data Quality Model & Academic Integrity</span>
+            </div>
+
+            <h2 class="text-3xl font-extrabold text-[#1E3A8A] tracking-tight">Never Guessing. Always Transparent.</h2>
+
+            <p class="text-slate-600 text-sm leading-relaxed">
+                In EduVerse AI, missing information is never treated as zero, and unavailable data is never reported as negative. Every institution profile explicitly displays its source reference, last verification timestamp, and validation status:
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-left pt-3">
+                <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs">
+                    <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-teal-50 text-teal-700 border border-teal-200 mb-2.5">VERIFIED</span>
+                    <p class="text-xs text-slate-600 leading-relaxed">Sourced directly from official university portals or government gazettes.</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs">
+                    <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200 mb-2.5">SAMPLE</span>
+                    <p class="text-xs text-slate-600 leading-relaxed">Academic development test dataset. Clearly labeled to prevent deception.</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs">
+                    <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-2.5">ESTIMATED</span>
+                    <p class="text-xs text-slate-600 leading-relaxed">Calculated from historical public fee notifications or state committee norms.</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs">
+                    <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-200 mb-2.5">NOT_AVAILABLE</span>
+                    <p class="text-xs text-slate-600 leading-relaxed">Explicitly acknowledged as missing rather than coerced to a false number.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Load live platform statistics on page load
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const res = await fetch('/api/analytics');
+            if (res.ok) {
+                const data = await res.json();
+                if (data.success && data.summary) {
+                    document.getElementById('stat-colleges').textContent = data.summary.total_colleges || 0;
+                    document.getElementById('stat-courses').textContent = data.summary.total_courses || 0;
+                    document.getElementById('stat-districts').textContent = data.summary.total_districts || 0;
+                    document.getElementById('stat-status').textContent = '100% Sourced';
+                    return;
+                }
+            }
+            // If empty database
+            document.getElementById('stat-colleges').textContent = '0';
+            document.getElementById('stat-courses').textContent = '0';
+            document.getElementById('stat-districts').textContent = '0';
+            document.getElementById('stat-status').textContent = 'Ready to Seed';
+        } catch (e) {
+            console.error('Failed to load database stats', e);
+            document.getElementById('stat-colleges').textContent = '—';
+            document.getElementById('stat-courses').textContent = '—';
+            document.getElementById('stat-districts').textContent = '—';
+            document.getElementById('stat-status').textContent = '—';
+        }
+    });
+</script>
+{% endblock %}

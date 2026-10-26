@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ 'Add New College' if action == 'new' else 'Edit ' ~ college.name }} | EduVerse AI Admin{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center space-x-2 text-xs text-slate-500">
+        <a href="{{ url_for('admin.dashboard') }}" class="hover:text-slate-800">Admin Console</a>
+        <span>/</span>
+        <span class="text-slate-900 font-semibold">{{ 'Add New College' if action == 'new' else 'Edit College' }}</span>
+    </nav>
+
+    <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm space-y-6">
+        <div class="border-b border-slate-100 pb-4">
+            <h1 class="text-2xl font-extrabold text-slate-900">
+                {{ 'Add New Institution' if action == 'new' else 'Edit Institutional Profile' }}
+            </h1>
+            <p class="text-xs text-slate-500 mt-1">
+                Maintain accurate institutional records. All modifications are timestamped and reflected immediately in recommendation vectors and analytics.
+            </p>
+        </div>
+
+        <form method="POST" class="space-y-6">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <!-- Name -->
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Institution Full Name *</label>
+                    <input type="text" name="name" value="{{ college.name or '' }}" required placeholder="e.g. Government College of Technology" class="w-full px-4 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 focus:bg-white transition">
+                </div>
+
+                <!-- Code -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">College Code (TNEA / AISHE)</label>
+                    <input type="text" name="code" value="{{ college.code or '' }}" placeholder="e.g. GCT-2005" class="w-full px-4 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 focus:bg-white transition">
+                </div>
+
+                <!-- State -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">State</label>
+                    <input type="text" name="state" value="{{ college.state or 'Tamil Nadu' }}" required class="w-full px-4 py-2 text-xs rounded-xl border border-slate-200 bg-slate-100 text-slate-600 focus:outline-none" readonly>
+                </div>
+
+                <!-- District -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">District *</label>
+                    <select name="district_id" required class="w-full px-4 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 focus:bg-white transition">
+                        <option value="">Select District</option>
+                        {% for dist in districts %}
+                            <option value="{{ dist.id }}" {{ 'selected' if (college.district_id == dist.id or college.district == dist.name) else '' }}>{{ dist.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- City -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">City / Town *</label>
+                    <input type="text" name="city" value="{{ college.city or '' }}" required placeholder="e.g. Coimbatore" class="w-full px-4 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 focus:bg-white transition">
+                </div>
+
+                <!-- College Type (Legacy Display) -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Display College Type *</label>
+                    <select name="college_type" required class="w-full px-4 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 focus:bg-white transition">
+                        <option value="Government" {{ 'selected' if college.college_type == 'Government' else '' }}>Government</option>
+                        <option value="Government-Aided" {{ 'selected' if college.college_type == 'Government-Aided' else '' }}>Government-Aided</option>
+                        <option value="Autonomous" {{ 'selected' if college.college_type == 'Autonomous' else '' }}>Autonomous</option>
+                        <option value="Self-Financing" {{ 'selected' if college.college_type == 'Self-Financing' else '' }}>Self-Financing</option>
+                        <option value="Deemed University" {{ 'selected' if college.college_type == 'Deemed University' else '' }}>Deemed University</option>
+                        <option value="University Department" {{ 'selected' if college.college_type == 'University Department' else '' }}>University Department</option>
+                    </select>
+                </div>
+
+                <!-- Primary Ownership Type -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Primary Ownership Type *</label>
+                    <select name="primary_college_type" class="w-full px-4 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 focus:bg-white transition">
+                        <option value="GOVERNMENT" {{ 'selected' if college.primary_college_type == 'GOVERNMENT' else '' }}>GOVERNMENT (Public / State-run)</option>
+                        <option value="GOVERNMENT_AIDED" {{ 'selected' if college.primary_college_type == 'GOVERNMENT_AIDED' else '' }}>GOVERNMENT_AIDED (State Grant-in-Aid)</option>
+                        <option value="SELF_FINANCING" {{ 'selected' if college.primary_college_type == 'SELF_FINANCING' else '' }}>SELF_FINANCING (Private / Self-funded)</option>
+                        <option value="OTHER" {{ 'selected' if college.primary_college_type == 'OTHER' else '' }}>OTHER (Central / Deemed)</option>
+                        <option value="UNKNOWN" {{ 'selected' if (not college.primary_college_type or college.primary_college_type == 'UNKNOWN') else '' }}>UNKNOWN</option>
+                    </select>
+                </div>
+
+                <!-- Academic Autonomy Status -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Academic Autonomy Status *</label>
+                    <select name="autonomous_status" class="w-full px-4 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 focus:bg-white transition">
+                        <option value="AUTONOMOUS" {{ 'selected' if (college.autonomous_status == 'AUTONOMOUS' or college.is_autonomous) else '' }}>AUTONOMOUS (UGC Conferred)</option>
+                        <option value="NON_AUTONOMOUS" {{ 'selected' if college.autonomous_status == 'NON_AUTONOMOUS' else '' }}>NON_AUTONOMOUS (Affiliated Curriculum)</option>
+                        <option value="UNKNOWN" {{ 'selected' if (not college.autonomous_status or college.autonomous_status == 'UNKNOWN') else '' }}>UNKNOWN</option>
+                    </select>
+                </div>
+
+                <!-- Data Status -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Data Verification Status *</label>
+                    <select name="data_status" required class="w-full px-4 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 focus:bg-white transition">
+                        <option value="VERIFIED" {{ 'selected' if college.data_status == 'VERIFIED' else '' }}>VERIFIED (Official public gazette)</option>
+                        <option value="ESTIMATED" {{ 'selected' if college.data_status == 'ESTIMATED' else '' }}>ESTIMATED (Normative standard)</option>
+                        <option value="SAMPLE" {{ 'selected' if college.data_status == 'SAMPLE' else '' }}>SAMPLE (Academic test data)</option>
+                        <option value="UNVERIFIED" {{ 'selected' if college.data_status == 'UNVERIFIED' else '' }}>UNVERIFIED</option>
+                        <option value="NOT_AVAILABLE" {{ 'selected' if college.data_status == 'NOT_AVAILABLE' else '' }}>NOT_AVAILABLE</option>
+                    </select>
+                </div>
+
+                <!-- Address -->
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Full Postal Address</label>
+                    <textarea name="address" rows="2" placeholder="Street, landmark, pincode..." class="w-full px-4 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 focus:bg-white transition">{{ college.address or '' }}</textarea>
+                </div>
+
+                <!-- Coordinates -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Latitude (Decimal, e.g. 13.0131)</label>
+                    <input type="number" step="0.000001" name="latitude" value="{{ college.latitude if college.latitude is not none else '' }}" placeholder="13.0131" class="w-full px-4 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 focus:bg-white transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Longitude (Decimal, e.g. 80.2359)</label>
+                    <input type="number" step="0.000001" name="longitude" value="{{ college.longitude if college.longitude is not none else '' }}" placeholder="80.2359" class="w-full px-4 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 focus:bg-white transition">
+                </div>
+
+                <!-- Website & Verification -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Official Website URL</label>
+                    <input type="url" name="official_website_url" value="{{ college.official_website_url or college.website or '' }}" placeholder="https://college.edu.in" class="w-full px-4 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 focus:bg-white transition">
+                    <span class="text-[10px] text-slate-400 mt-1 block">Genuine institutional domain only. Leave blank if not verified.</span>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Website Verification Status</label>
+                    <select name="website_status" class="w-full px-4 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 focus:bg-white transition">
+                        <option value="VERIFIED" {{ 'selected' if college.website_status == 'VERIFIED' else '' }}>VERIFIED (Tested & Reachable)</option>
+                        <option value="MISSING" {{ 'selected' if (not college.website_status or college.website_status == 'MISSING') else '' }}>MISSING (No Verified Domain)</option>
+                        <option value="BROKEN" {{ 'selected' if college.website_status == 'BROKEN' else '' }}>BROKEN (Domain Dead / DNS Failure)</option>
+                        <option value="UNVERIFIED" {{ 'selected' if college.website_status == 'UNVERIFIED' else '' }}>UNVERIFIED</option>
+                    </select>
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Data Source Verification URL</label>
+                    <input type="url" name="source_url" value="{{ college.source_url or '' }}" placeholder="https://college.edu.in/fee-schedule" class="w-full px-4 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 focus:bg-white transition">
+                </div>
+
+                <!-- Description -->
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Institutional Description</label>
+                    <textarea name="description" rows="3" placeholder="Overview, history, accreditation..." class="w-full px-4 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 focus:bg-white transition">{{ college.description or '' }}</textarea>
+                </div>
+
+                <!-- Facilities (CSV format) -->
+                <div class="sm:col-span-2">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Campus Facilities (Comma-separated)</label>
+                    {% set fac_val = college.facilities|join(', ') if college.facilities is defined else '' %}
+                    <input type="text" name="facilities_csv" value="{{ fac_val }}" placeholder="Hostel, Central Library, WiFi Campus, Placement Cell, Sports Ground" class="w-full px-4 py-2 text-xs rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 focus:bg-white transition">
+                    <span class="text-[10px] text-slate-400 mt-1 block">Separate facility names with commas.</span>
+                </div>
+
+                <!-- Course Addition Section -->
+                <div class="sm:col-span-2 pt-4 border-t border-slate-100">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 mb-3">
+                        {{ 'Initial Course Offering' if action == 'new' else 'Add Another Course Program' }}
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Course Name</label>
+                            <input type="text" name="{{ 'initial_course_name' if action == 'new' else 'new_course_name' }}" placeholder="e.g. MCA, MBA, B.Tech CSE" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none bg-slate-50 focus:bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Annual Tuition Fee (₹)</label>
+                            <input type="number" step="1000" name="{{ 'initial_course_fee' if action == 'new' else 'new_course_fee' }}" placeholder="e.g. 50000" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none bg-slate-50 focus:bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Stream Category</label>
+                            <select name="initial_course_category" class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none bg-slate-50 focus:bg-white">
+                                <option value="Postgraduate">Postgraduate</option>
+                                <option value="Undergraduate">Undergraduate</option>
+                                <option value="Engineering">Engineering</option>
+                                <option value="Arts & Science">Arts & Science</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="pt-6 border-t border-slate-100 flex items-center justify-end space-x-3">
+                <a href="{{ url_for('admin.dashboard') }}" class="px-5 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition">
+                    Cancel
+                </a>
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold uppercase tracking-wider shadow-md shadow-indigo-100 transition">
+                    {{ 'Create Institution' if action == 'new' else 'Save Changes' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

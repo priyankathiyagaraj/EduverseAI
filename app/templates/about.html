@@ -1,0 +1,999 @@
+{% extends 'base.html' %}
+
+{% block title %}About EduVerse AI | Smart College Recommendation System for Tamil Nadu{% endblock %}
+
+{% block content %}
+<div class="space-y-16 py-8">
+
+    <!-- ========================================== -->
+    <!-- 1. HERO SECTION -->
+    <!-- ========================================== -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#1E3A8A] via-[#172554] to-slate-900 text-white p-8 sm:p-14 lg:p-16 border border-blue-900/40 shadow-xl">
+            <!-- Decorative Background Glow -->
+            <div class="absolute -top-24 -right-24 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-teal-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10 max-w-3xl space-y-6">
+                <!-- Badge -->
+                <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur border border-white/20 text-xs font-semibold text-blue-200">
+                    <span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span>
+                    <span>Empowering Tamil Nadu Higher Education</span>
+                </div>
+
+                <!-- Main Title -->
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
+                    Discover the Right Course.<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-sky-200 to-teal-200">Find the Right College.</span><br>
+                    Build Your Future.
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="text-base sm:text-lg text-slate-200 leading-relaxed font-normal">
+                    EduVerse AI is an intelligent higher education discovery platform built for Tamil Nadu students.
+                    Whether you want data-driven AI recommendations based on your 12th standard marks or prefer exploring courses and colleges through custom filters, EduVerse AI gives you transparent, factual guidance without commercial bias.
+                </p>
+
+                <!-- Actions -->
+                <div class="pt-4 flex flex-wrap items-center gap-3 sm:gap-4">
+                    <a href="#ai-course-section" class="px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/30 transition flex items-center space-x-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <span>Try 12th Mark AI Recommender</span>
+                    </a>
+                    <a href="{{ url_for('colleges.explore') }}" class="px-6 py-3.5 rounded-xl text-xs sm:text-sm font-semibold bg-white/10 hover:bg-white/20 text-white border border-white/15 transition flex items-center space-x-2">
+                        <span>Explore 1,129 Colleges</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </a>
+                    <a href="#query-section" class="px-5 py-3.5 rounded-xl text-xs sm:text-sm font-semibold text-slate-300 hover:text-white transition">
+                        Have Questions? Contact Us &darr;
+                    </a>
+                </div>
+
+                <!-- Stats Strip -->
+                <div class="pt-8 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div>
+                        <div class="text-2xl sm:text-3xl font-extrabold text-white">{{ stats.total_colleges }}</div>
+                        <div class="text-xs text-slate-300 mt-0.5">Colleges Indexed</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl sm:text-3xl font-extrabold text-sky-300">{{ stats.total_districts }} / 38</div>
+                        <div class="text-xs text-slate-300 mt-0.5">Districts (100% Coverage)</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl sm:text-3xl font-extrabold text-teal-300">{{ stats.total_courses }}+</div>
+                        <div class="text-xs text-slate-300 mt-0.5">Cataloged Degree Programs</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl sm:text-3xl font-extrabold text-emerald-300">{{ stats.verified_websites }}</div>
+                        <div class="text-xs text-slate-300 mt-0.5">Verified Official Websites</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 2. ABOUT EDUVERSE AI -->
+    <!-- ========================================== -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm space-y-6">
+            <div class="max-w-3xl space-y-3">
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-600">Our Purpose & Mission</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">What is EduVerse AI?</h2>
+                <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+                    EduVerse AI is a smart education discovery platform engineered to help students make better, objective decisions about higher education in Tamil Nadu.
+                    Choosing the right college and career trajectory is one of the most critical decisions a student makes, yet traditional search engines are crowded with paid advertisements, unverified rankings, and fragmented information.
+                </p>
+                <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+                    Our platform solves this challenge through a structured discovery pipeline:
+                </p>
+            </div>
+
+            <!-- Pipeline Visual -->
+            <div class="bg-blue-50/50 p-6 rounded-2xl border border-blue-100 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div class="space-y-1">
+                    <span class="w-8 h-8 rounded-full bg-blue-600 text-white inline-flex items-center justify-center text-xs font-bold">1</span>
+                    <h3 class="text-xs font-bold text-slate-900">District Selection</h3>
+                    <p class="text-[11px] text-slate-500">All 38 Tamil Nadu districts covered</p>
+                </div>
+                <div class="space-y-1">
+                    <span class="w-8 h-8 rounded-full bg-blue-600 text-white inline-flex items-center justify-center text-xs font-bold">2</span>
+                    <h3 class="text-xs font-bold text-slate-900">Target Course</h3>
+                    <p class="text-[11px] text-slate-500">Engineering, Computing, Arts & Science</p>
+                </div>
+                <div class="space-y-1">
+                    <span class="w-8 h-8 rounded-full bg-blue-600 text-white inline-flex items-center justify-center text-xs font-bold">3</span>
+                    <h3 class="text-xs font-bold text-slate-900">Institution Type</h3>
+                    <p class="text-[11px] text-slate-500">Government, Aided, Autonomous, Private</p>
+                </div>
+                <div class="space-y-1">
+                    <span class="w-8 h-8 rounded-full bg-teal-600 text-white inline-flex items-center justify-center text-xs font-bold">4</span>
+                    <h3 class="text-xs font-bold text-slate-900">College Discovery</h3>
+                    <p class="text-[11px] text-slate-500">Verified links, fees, and GPS maps</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 3. WHAT WE OFFER -->
+    <!-- ========================================== -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="text-center max-w-2xl mx-auto space-y-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-600">Platform Capabilities</span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">What We Offer</h2>
+            <p class="text-xs sm:text-sm text-slate-500">Everything you need to navigate higher education admissions in one unified portal.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Card 1: Course Discovery -->
+            <div class="bg-white rounded-3xl p-7 border border-slate-200 shadow-sm hover:shadow-md transition h-full flex flex-col justify-between space-y-4">
+                <div class="space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl">
+                        🎓
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900">Course Discovery</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Explore degree programs across Engineering, Information Technology, Computer Applications, Management, Commerce, and Sciences with eligibility criteria, typical durations, and career pathways.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 2: College Discovery -->
+            <div class="bg-white rounded-3xl p-7 border border-slate-200 shadow-sm hover:shadow-md transition h-full flex flex-col justify-between space-y-4">
+                <div class="space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center text-2xl">
+                        🏫
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900">College Discovery</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Search over 1,129 colleges across all 38 districts of Tamil Nadu. Filter by district, specific degree programs, 8 institutional ownership categories, fee ceiling, and campus amenities.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 3: AI Course Recommendation -->
+            <div class="bg-white rounded-3xl p-7 border border-slate-200 shadow-sm hover:shadow-md transition h-full flex flex-col justify-between space-y-4">
+                <div class="space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center text-2xl">
+                        🤖
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900">AI Course Recommendation</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Provide your 12th standard marks and subject strengths. Our algorithm analyzes computational, analytical, and business aptitude vectors to recommend optimal course tracks with transparent explanations.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 4: 12th Mark-Based Recommendation -->
+            <div class="bg-white rounded-3xl p-7 border border-slate-200 shadow-sm hover:shadow-md transition h-full flex flex-col justify-between space-y-4">
+                <div class="space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-2xl">
+                        📊
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900">12th Mark-Based Recommendation</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Matches your academic scores directly against authentic Tamil Nadu cutoff trends and department guidelines, helping you target colleges where you meet or exceed historic admission benchmarks.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 5: College Comparison -->
+            <div class="bg-white rounded-3xl p-7 border border-slate-200 shadow-sm hover:shadow-md transition h-full flex flex-col justify-between space-y-4">
+                <div class="space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl">
+                        ⚖️
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900">College Comparison Matrix</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Compare up to 4 institutions side-by-side on an objective matrix covering annual tuition fees, cataloged courses, campus facilities, verified domains, and official accreditation.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 6: Official College Websites -->
+            <div class="bg-white rounded-3xl p-7 border border-slate-200 shadow-sm hover:shadow-md transition h-full flex flex-col justify-between space-y-4">
+                <div class="space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl">
+                        🌐
+                    </div>
+                    <h3 class="text-base font-bold text-slate-900">Official College Websites</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Zero-fabrication reachability verified domains. Every official website URL is checked for live DNS resolution and SSL security, protecting students from broken links and fake aggregator portals.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 4. HOW IT WORKS -->
+    <!-- ========================================== -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="text-center max-w-2xl mx-auto space-y-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-600">Simple Step-by-Step Flow</span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">How It Works</h2>
+            <p class="text-xs sm:text-sm text-slate-500">From high school marks to college admissions in six simple steps.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm h-full flex flex-col justify-between relative">
+                <div>
+                    <span class="text-3xl font-black text-blue-200">01</span>
+                    <h3 class="text-sm font-bold text-slate-900 mt-2">Enter 12th Marks</h3>
+                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">Input your 12th standard aggregate percentage and optional key subject scores (Maths, CS, Physics, Commerce).</p>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm h-full flex flex-col justify-between relative">
+                <div>
+                    <span class="text-3xl font-black text-blue-200">02</span>
+                    <h3 class="text-sm font-bold text-slate-900 mt-2">Choose AI or Normal Mode</h3>
+                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">Choose between AI-powered aptitude scoring or normal filter-driven catalog browsing based on your comfort.</p>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm h-full flex flex-col justify-between relative">
+                <div>
+                    <span class="text-3xl font-black text-blue-200">03</span>
+                    <h3 class="text-sm font-bold text-slate-900 mt-2">Course Suggestions</h3>
+                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">Review recommended degree programs (e.g. B.Tech AI & ML, BCA, B.Com, MCA) with match rationales.</p>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm h-full flex flex-col justify-between relative">
+                <div>
+                    <span class="text-3xl font-black text-blue-200">04</span>
+                    <h3 class="text-sm font-bold text-slate-900 mt-2">Explore Colleges</h3>
+                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">Filter institutions offering your desired course across any of the 38 Tamil Nadu districts.</p>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm h-full flex flex-col justify-between relative">
+                <div>
+                    <span class="text-3xl font-black text-blue-200">05</span>
+                    <h3 class="text-sm font-bold text-slate-900 mt-2">Compare Colleges</h3>
+                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">Select top institutions and compare tuition fees, facilities, NAAC ratings, and official domains side-by-side.</p>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm h-full flex flex-col justify-between relative">
+                <div>
+                    <span class="text-3xl font-black text-blue-200">06</span>
+                    <h3 class="text-sm font-bold text-slate-900 mt-2">Informed Decision</h3>
+                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">Visit verified official college websites, check campus GPS maps, and proceed with official TNEA / TANCET counseling.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 5. AI COURSE RECOMMENDATION (MAIN IDEA) -->
+    <!-- ========================================== -->
+    <section id="ai-course-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-gradient-to-br from-[#1E3A8A] via-[#1E40AF] to-[#0F172A] text-white rounded-3xl p-8 sm:p-12 lg:p-14 border border-blue-900/50 shadow-xl space-y-8">
+            <div class="max-w-3xl space-y-3">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/10 text-xs font-semibold text-blue-200 border border-white/15">
+                    <span>Core Feature</span>
+                </div>
+                <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight">AI-Based Course Recommendation</h2>
+                <p class="text-sm sm:text-base text-blue-100 leading-relaxed font-normal">
+                    Students enter their 12th standard academic marks and subject scores. Our recommendation engine mathematically analyzes subject proficiencies, verifies Tamil Nadu eligibility prerequisites, and calculates personalized degree fit scores.
+                </p>
+                <div class="p-4 rounded-2xl bg-white/10 border border-white/10 text-xs text-blue-100">
+                    <strong class="text-white">Zero Fake Claims:</strong> We do NOT present fabricated AI statistics like "98% accuracy". All recommendations are deterministically scored against official Tamil Nadu university curricula, UGC standards, and real college program offerings.
+                </div>
+            </div>
+
+            <!-- Interactive AI Course Recommender Widget -->
+            <div class="bg-white text-slate-900 rounded-3xl p-6 sm:p-8 shadow-lg space-y-6">
+                <div class="border-b border-slate-100 pb-4 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900">Live 12th Marks AI Course Simulator</h3>
+                        <p class="text-xs text-slate-500">Test the recommendation logic directly from this page.</p>
+                    </div>
+                    <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700">Interactive</span>
+                </div>
+
+                <form id="ai-sim-form" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">12th Overall Percentage *</label>
+                            <input type="number" id="sim-marks" min="35" max="100" step="0.1" value="85" required class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">12th Stream / Group</label>
+                            <select id="sim-stream" class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white">
+                                <option value="Science (Maths)" selected>Science with Maths (MPC)</option>
+                                <option value="Science (CS)">Science with Computer Science</option>
+                                <option value="Commerce">Commerce & Accountancy</option>
+                                <option value="Arts">Humanities / Arts</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Key Subject Strength</label>
+                            <select id="sim-strength" class="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white">
+                                <option value="computer_science" selected>Computer Science (High)</option>
+                                <option value="mathematics">Mathematics (High)</option>
+                                <option value="physics">Physics / Engineering (High)</option>
+                                <option value="commerce">Commerce & Finance (High)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2">
+                        <span class="text-xs text-slate-400">Evaluates against 16+ cataloged degree streams</span>
+                        <button type="submit" id="sim-btn" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20 transition flex items-center space-x-1.5">
+                            <span>Analyze Marks with AI Engine</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Results Output Container -->
+                <div id="ai-sim-results" class="hidden space-y-4 pt-4 border-t border-slate-100">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">Top Recommended Courses</h4>
+                        <span id="ai-sim-count" class="text-xs text-blue-600 font-semibold"></span>
+                    </div>
+                    <div id="ai-sim-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 6. NORMAL COURSE DISCOVERY -->
+    <!-- ========================================== -->
+    <section id="course-discovery-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm space-y-8">
+            <div class="max-w-3xl space-y-3">
+                <span class="text-xs font-bold uppercase tracking-wider text-teal-600">Deterministic Option</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Find Courses Your Way (Normal Course Discovery)</h2>
+                <p class="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
+                    Students who prefer browsing without predictive AI scoring can simply provide their academic details, select their stream of interest, and explore available programs using clean, transparent filters.
+                </p>
+            </div>
+
+            <!-- Normal Discovery Filter Form -->
+            <form id="normal-sim-form" class="space-y-4 bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Minimum 12th Marks (%)</label>
+                        <input type="number" id="norm-marks" min="35" max="100" value="50" placeholder="e.g. 50" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Academic Stream</label>
+                        <select id="norm-stream" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500">
+                            <option value="Any" selected>Any Stream</option>
+                            <option value="Science (Maths)">Science</option>
+                            <option value="Commerce">Commerce</option>
+                            <option value="Arts">Arts / Humanities</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Degree Category</label>
+                        <select id="norm-category" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500">
+                            <option value="All" selected>All Categories</option>
+                            <option value="Engineering">Engineering (B.Tech / B.E.)</option>
+                            <option value="Computing & IT">Computing (BCA / B.Sc IT)</option>
+                            <option value="Commerce & Finance">Commerce (B.Com)</option>
+                            <option value="Management & Business">Management (BBA)</option>
+                            <option value="Postgraduate">Postgraduate (MCA / MBA)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2">
+                    <span class="text-xs text-slate-400">Rule-based catalog search</span>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-teal-600 hover:bg-teal-700 text-white shadow-sm transition">
+                        Browse Matching Courses
+                    </button>
+                </div>
+            </form>
+
+            <!-- Normal Results Container -->
+            <div id="normal-sim-results" class="hidden space-y-4">
+                <div class="flex items-center justify-between">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700">Available Degree Programs</h4>
+                    <span id="norm-sim-count" class="text-xs text-teal-600 font-semibold"></span>
+                </div>
+                <div id="normal-sim-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 7. AI VS NORMAL COURSE DISCOVERY COMPARISON -->
+    <!-- ========================================== -->
+    <section id="ai-vs-normal-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="text-center max-w-2xl mx-auto space-y-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-600">Dual Discovery Paradigms</span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">AI vs Normal Course Discovery</h2>
+            <p class="text-xs sm:text-sm text-slate-500">Choose the methodology that aligns best with your decision-making style.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Left: AI-Powered Recommendation -->
+            <div class="bg-gradient-to-br from-blue-50 to-slate-50 rounded-3xl p-8 border border-blue-200 shadow-sm space-y-5">
+                <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-600 text-white">AI-Powered</span>
+                    <span class="text-xl">🤖</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">AI-Powered Recommendation</h3>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    Designed for students who want personalized guidance based on their individual academic strengths, subject marks, and aptitude vectors.
+                </p>
+
+                <!-- Flowchart -->
+                <div class="space-y-2 bg-white/90 backdrop-blur p-4 rounded-2xl border border-blue-100 text-xs font-mono">
+                    <div class="flex items-center space-x-2 text-blue-900 font-bold">
+                        <span>1.</span><span>Student 12th Marks + Subject Breakdown</span>
+                    </div>
+                    <div class="text-blue-400 pl-4">&darr;</div>
+                    <div class="flex items-center space-x-2 text-blue-900 font-bold">
+                        <span>2.</span><span>Multi-Criteria Scoring Engine</span>
+                    </div>
+                    <div class="text-blue-400 pl-4">&darr;</div>
+                    <div class="flex items-center space-x-2 text-blue-900 font-bold">
+                        <span>3.</span><span>Weighted Aptitude Matching</span>
+                    </div>
+                    <div class="text-blue-400 pl-4">&darr;</div>
+                    <div class="flex items-center space-x-2 text-blue-900 font-bold">
+                        <span>4.</span><span>Ranked Courses + Explainability Factors</span>
+                    </div>
+                </div>
+
+                <ul class="text-xs text-slate-600 space-y-1.5 list-disc list-inside">
+                    <li>Evaluates subject performance (e.g. Maths, CS, Commerce)</li>
+                    <li>Generates personalized match scores (0 to 100)</li>
+                    <li>Explains exact reasons for course compatibility</li>
+                </ul>
+            </div>
+
+            <!-- Right: Normal Course Discovery -->
+            <div class="bg-gradient-to-br from-teal-50 to-slate-50 rounded-3xl p-8 border border-teal-200 shadow-sm space-y-5">
+                <div class="flex items-center justify-between">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-teal-600 text-white">Normal Discovery</span>
+                    <span class="text-xl">🔍</span>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">Normal Course Discovery</h3>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    Designed for students who already have a clear direction and prefer filtering colleges and courses deterministically without scoring algorithms.
+                </p>
+
+                <!-- Flowchart -->
+                <div class="space-y-2 bg-white/90 backdrop-blur p-4 rounded-2xl border border-teal-100 text-xs font-mono">
+                    <div class="flex items-center space-x-2 text-teal-900 font-bold">
+                        <span>1.</span><span>Select Academic Stream & Interests</span>
+                    </div>
+                    <div class="text-teal-400 pl-4">&darr;</div>
+                    <div class="flex items-center space-x-2 text-teal-900 font-bold">
+                        <span>2.</span><span>Set 12th Marks Minimum Cutoff</span>
+                    </div>
+                    <div class="text-teal-400 pl-4">&darr;</div>
+                    <div class="flex items-center space-x-2 text-teal-900 font-bold">
+                        <span>3.</span><span>Filter Course Database Catalog</span>
+                    </div>
+                    <div class="text-teal-400 pl-4">&darr;</div>
+                    <div class="flex items-center space-x-2 text-teal-900 font-bold">
+                        <span>4.</span><span>Browse Suitable Courses & Colleges</span>
+                    </div>
+                </div>
+
+                <ul class="text-xs text-slate-600 space-y-1.5 list-disc list-inside">
+                    <li>Transparent eligibility cutoff filtering</li>
+                    <li>Direct access to full course offerings across TN</li>
+                    <li>No complex algorithms, just pure objective data</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 8. WHY EDUVERSE AI? -->
+    <!-- ========================================== -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="text-center max-w-2xl mx-auto space-y-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-600">The EduVerse Difference</span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Why EduVerse AI?</h2>
+            <p class="text-xs sm:text-sm text-slate-500">Built on five foundational pillars designed for educational clarity.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2 text-center h-full flex flex-col justify-between">
+                <div>
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto text-lg font-bold">🎯</div>
+                    <h3 class="text-xs font-bold text-slate-900 mt-2">Student-Focused</h3>
+                    <p class="text-[11px] text-slate-500 leading-relaxed mt-1">Built specifically for Tamil Nadu aspirants navigating higher education admissions.</p>
+                </div>
+            </div>
+            <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2 text-center h-full flex flex-col justify-between">
+                <div>
+                    <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center mx-auto text-lg font-bold">📊</div>
+                    <h3 class="text-xs font-bold text-slate-900 mt-2">Data-Driven</h3>
+                    <p class="text-[11px] text-slate-500 leading-relaxed mt-1">1,129 real institutions cataloged across all 38 districts with 8,120 programs.</p>
+                </div>
+            </div>
+            <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2 text-center h-full flex flex-col justify-between">
+                <div>
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto text-lg font-bold">🧠</div>
+                    <h3 class="text-xs font-bold text-slate-900 mt-2">Personalized</h3>
+                    <p class="text-[11px] text-slate-500 leading-relaxed mt-1">Multi-attribute scoring evaluates course compatibility, fees, and location affinity.</p>
+                </div>
+            </div>
+            <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2 text-center h-full flex flex-col justify-between">
+                <div>
+                    <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center mx-auto text-lg font-bold">⚡</div>
+                    <h3 class="text-xs font-bold text-slate-900 mt-2">Easy to Use</h3>
+                    <p class="text-[11px] text-slate-500 leading-relaxed mt-1">Instant filtering, responsive side-by-side matrices, and campus GPS maps.</p>
+                </div>
+            </div>
+            <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2 text-center h-full flex flex-col justify-between">
+                <div>
+                    <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto text-lg font-bold">🌐</div>
+                    <h3 class="text-xs font-bold text-slate-900 mt-2">All-in-One Platform</h3>
+                    <p class="text-[11px] text-slate-500 leading-relaxed mt-1">From 12th marks analysis to verified college websites in one place.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 9. STUDENT FEEDBACK & RATINGS -->
+    <!-- ========================================== -->
+    <section id="feedback-section" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-gradient-to-br from-[#1E3A8A] via-slate-900 to-[#172554] rounded-3xl p-8 sm:p-12 text-white border border-blue-900/40 shadow-xl relative overflow-hidden space-y-8">
+            <div class="absolute -right-16 -top-16 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 pb-6 border-b border-white/10">
+                <div class="space-y-2 max-w-xl">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/10 text-xs font-semibold text-blue-200 border border-white/15">
+                        <span>⭐ Student Voice & Platform Feedback</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Rate Your Experience</h2>
+                    <p class="text-xs sm:text-sm text-slate-300">
+                        Help us improve EduVerse AI. Share your feedback, suggest features, and rate our college discovery tools.
+                    </p>
+                </div>
+
+                <!-- Community Rating Badge -->
+                <div class="p-4 rounded-2xl bg-white/10 backdrop-blur border border-white/15 text-center shrink-0 min-w-[160px]">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-300">Community Rating</span>
+                    <div class="text-3xl font-extrabold text-amber-400 mt-0.5 flex items-center justify-center space-x-1">
+                        <span>{{ stats.avg_rating }}</span>
+                        <span class="text-2xl">★</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400 block mt-0.5">
+                        {{ stats.total_feedback }} Verified Reviews
+                    </span>
+                </div>
+            </div>
+
+            <!-- Feedback Submission Form -->
+            <form id="student-feedback-form" method="POST" action="{{ url_for('main.submit_feedback') }}" class="space-y-5">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="rating" id="feedback-rating-val" value="5">
+
+                <!-- Star Selector -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-200 mb-2">How would you rate EduVerse AI? *</label>
+                    <div class="flex items-center space-x-2 sm:space-x-3" id="star-rating-container">
+                        {% for i in range(1, 6) %}
+                            <button type="button" data-rating="{{ i }}" class="star-btn text-3xl sm:text-4xl text-amber-400 hover:scale-110 transition-transform focus:outline-none" aria-label="Rate {{ i }} stars">
+                                ★
+                            </button>
+                        {% endfor %}
+                        <span id="star-rating-text" class="text-xs font-bold text-amber-300 ml-3">5 Stars - Excellent!</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Student Name -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-200 mb-1">Your Name *</label>
+                        <input type="text" name="student_name" id="feedback-name" required value="{{ current_user.name if current_user else '' }}" placeholder="e.g. Priyanka S" class="w-full px-4 py-2.5 text-xs rounded-xl border border-white/20 bg-white/10 text-white placeholder-slate-400 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
+                    </div>
+
+                    <!-- Email Address (Optional) -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-200 mb-1">Email Address (Optional)</label>
+                        <input type="email" name="email" id="feedback-email" value="{{ current_user.email if current_user else '' }}" placeholder="e.g. student@gmail.com" class="w-full px-4 py-2.5 text-xs rounded-xl border border-white/20 bg-white/10 text-white placeholder-slate-400 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
+                    </div>
+                </div>
+
+                <!-- Feedback Message -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-200 mb-1">Your Comments or Suggestions (Optional)</label>
+                    <textarea name="feedback_message" id="feedback-message" rows="3" placeholder="Tell us what you liked, or what features you would like added to help with Tamil Nadu college admissions..." class="w-full px-4 py-2.5 text-xs rounded-xl border border-white/20 bg-white/10 text-white placeholder-slate-400 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex items-center justify-between pt-2">
+                    <span class="text-[11px] text-slate-400">Feedback is reviewed directly by the platform engineering team.</span>
+                    <button type="submit" id="feedback-submit-btn" class="px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider bg-amber-500 hover:bg-amber-600 text-slate-950 shadow-md shadow-amber-500/20 transition flex items-center space-x-2">
+                        <span>Submit Feedback</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Feedback AJAX Result Box -->
+            <div id="feedback-ajax-result" class="hidden p-4 rounded-2xl bg-white/10 border border-white/20 text-xs text-slate-200 space-y-1">
+                <div class="flex items-center space-x-2 font-bold text-amber-300">
+                    <span>✓ Thank you for your feedback!</span>
+                </div>
+                <p id="feedback-ajax-details" class="text-slate-300">
+                    Your rating has been saved into our system.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- 10. STUDENT QUERIES / CONTACT ADMIN -->
+    <!-- ========================================== -->
+    <section id="query-section" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm space-y-8">
+            <div class="text-center max-w-xl mx-auto space-y-2">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 text-xs font-semibold text-blue-700 border border-blue-100">
+                    <span>Direct Administrative Helpdesk</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Have a Question?</h2>
+                <p class="text-xs sm:text-sm text-slate-500">
+                    Have questions regarding college cutoffs, courses, AI recommendations, or technical support?
+                    Submit your query directly to the EduVerse AI administration team.
+                </p>
+            </div>
+
+            <!-- Query Submission Form -->
+            <form id="student-query-form" method="POST" action="{{ url_for('main.about') }}" class="space-y-5">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Student Name -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Your Full Name *</label>
+                        <input type="text" name="student_name" id="query-name" required placeholder="e.g. Priyanka S" class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition">
+                    </div>
+
+                    <!-- Email Address -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Email Address *</label>
+                        <input type="email" name="email" id="query-email" required placeholder="e.g. student@gmail.com" class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition">
+                    </div>
+
+                    <!-- Phone Number (Optional) -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Phone Number (Optional)</label>
+                        <input type="tel" name="phone" id="query-phone" placeholder="e.g. +91 98765 43210" class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition">
+                    </div>
+
+                    <!-- Query Category -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Inquiry Category *</label>
+                        <select name="category" id="query-category" required class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition">
+                            <option value="">Select Category</option>
+                            {% for cat in query_categories %}
+                                <option value="{{ cat }}">{{ cat }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Query Message -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Your Message / Question *</label>
+                    <textarea name="message" id="query-message" rows="4" required placeholder="Please describe your question or query in detail (minimum 10 characters)..." class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition"></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex items-center justify-between pt-2">
+                    <span class="text-[11px] text-slate-400">All submissions are reviewed by authenticated administrators.</span>
+                    <button type="submit" id="query-submit-btn" class="px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20 transition flex items-center space-x-2">
+                        <span>Submit Query</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+            </form>
+
+            <!-- AJAX Result Box (hidden by default) -->
+            <div id="query-ajax-result" class="hidden p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 space-y-2">
+                <div class="flex items-center space-x-2 font-bold text-sm">
+                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    <span id="query-ajax-msg">Query Submitted Successfully!</span>
+                </div>
+                <p id="query-ajax-details" class="text-xs text-emerald-700">
+                    Your reference ticket has been logged into our administration console.
+                </p>
+            </div>
+        </div>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // -------------------------------------------------------------
+    // Interactive 12th Mark AI Course Simulator
+    // -------------------------------------------------------------
+    const aiSimForm = document.getElementById('ai-sim-form');
+    if (aiSimForm) {
+        aiSimForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('sim-btn');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<span>Analyzing...</span>`;
+
+            const marks = parseFloat(document.getElementById('sim-marks').value);
+            const stream = document.getElementById('sim-stream').value;
+            const strength = document.getElementById('sim-strength').value;
+
+            const subjectMarks = {};
+            subjectMarks[strength] = Math.min(100, marks + 8);
+
+            try {
+                const res = await fetch('/api/recommend/courses', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        marks_12th: marks,
+                        stream: stream,
+                        subject_marks: subjectMarks,
+                        interests: ['Software & AI', 'Computing']
+                    })
+                });
+
+                const data = await res.json();
+                if (data.success && data.courses) {
+                    const resultsContainer = document.getElementById('ai-sim-results');
+                    const cardsContainer = document.getElementById('ai-sim-cards');
+                    const countSpan = document.getElementById('ai-sim-count');
+
+                    countSpan.textContent = `${data.count} Suitable Courses Found`;
+                    cardsContainer.innerHTML = data.courses.map(c => `
+                        <div class="p-4 rounded-2xl bg-blue-50/50 border border-blue-100 flex flex-col justify-between space-y-3">
+                            <div class="space-y-1">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-700">${c.category}</span>
+                                    <span class="text-xs font-black text-blue-600">${c.match_score}% Fit</span>
+                                </div>
+                                <h5 class="text-xs font-bold text-slate-900 leading-tight">${c.course_name}</h5>
+                                <p class="text-[11px] text-slate-500 line-clamp-2">${c.description}</p>
+                            </div>
+                            <div class="space-y-2 pt-2 border-t border-blue-100/60">
+                                <div class="text-[10px] text-teal-700 font-medium">✓ ${c.matching_factors[0] || 'Eligible based on 12th marks'}</div>
+                                <a href="${c.explore_url}" class="block text-center px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-semibold transition">
+                                    Explore ${c.colleges_available_count} Colleges Offering This
+                                </a>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    resultsContainer.classList.remove('hidden');
+                } else {
+                    showToast(data.error ? data.error.message : 'Unable to generate course suggestions', 'warning');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Network error during AI course simulation', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        });
+    }
+
+    // -------------------------------------------------------------
+    // Normal Course Discovery Filter Handler
+    // -------------------------------------------------------------
+    const normSimForm = document.getElementById('normal-sim-form');
+    if (normSimForm) {
+        normSimForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const marks = parseFloat(document.getElementById('norm-marks').value) || null;
+            const stream = document.getElementById('norm-stream').value;
+            const category = document.getElementById('norm-category').value;
+
+            try {
+                const res = await fetch('/api/courses/discover', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        marks_12th: marks,
+                        stream: stream,
+                        category: category
+                    })
+                });
+
+                const data = await res.json();
+                if (data.success && data.courses) {
+                    const resultsContainer = document.getElementById('normal-sim-results');
+                    const cardsContainer = document.getElementById('normal-sim-cards');
+                    const countSpan = document.getElementById('norm-sim-count');
+
+                    countSpan.textContent = `${data.count} Degree Programs Available`;
+                    cardsContainer.innerHTML = data.courses.map(c => `
+                        <div class="p-4 rounded-2xl bg-emerald-50/40 border border-emerald-100 flex flex-col justify-between space-y-3">
+                            <div class="space-y-1">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">${c.category}</span>
+                                    <span class="text-[10px] text-slate-500 font-mono">${c.duration}</span>
+                                </div>
+                                <h5 class="text-xs font-bold text-slate-900 leading-tight">${c.course_name}</h5>
+                                <p class="text-[11px] text-slate-500 line-clamp-2">${c.description}</p>
+                            </div>
+                            <div class="space-y-2 pt-2 border-t border-emerald-100/60">
+                                <span class="text-[10px] text-slate-500 block">Min Eligibility: ${c.min_percentage}% in 12th</span>
+                                <a href="${c.explore_url}" class="block text-center px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-semibold transition">
+                                    View ${c.colleges_available_count} Colleges
+                                </a>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    resultsContainer.classList.remove('hidden');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Network error during normal course discovery', 'error');
+            }
+        });
+    }
+
+    // -------------------------------------------------------------
+    // Student Query AJAX Enhancement
+    // -------------------------------------------------------------
+    const queryForm = document.getElementById('student-query-form');
+    if (queryForm) {
+        queryForm.addEventListener('submit', async (e) => {
+            // Check if user submitted via standard button click
+            const name = document.getElementById('query-name').value.trim();
+            const email = document.getElementById('query-email').value.trim();
+            const phone = document.getElementById('query-phone').value.trim();
+            const category = document.getElementById('query-category').value.trim();
+            const message = document.getElementById('query-message').value.trim();
+
+            if (!name || !email || !category || !message) {
+                return; // Let standard HTML5 validation handle missing fields
+            }
+
+            e.preventDefault();
+            const submitBtn = document.getElementById('query-submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span>Submitting...</span>`;
+
+            try {
+                const res = await fetch('/api/queries', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        student_name: name,
+                        email: email,
+                        phone: phone,
+                        category: category,
+                        message: message
+                    })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    const resultBox = document.getElementById('query-ajax-result');
+                    const msgEl = document.getElementById('query-ajax-msg');
+                    const detailsEl = document.getElementById('query-ajax-details');
+
+                    msgEl.textContent = `Thank You, ${data.query.student_name}!`;
+                    detailsEl.textContent = `${data.message} Status: ${data.query.status}. We will get back to you at ${data.query.email}.`;
+
+                    resultBox.classList.remove('hidden');
+                    queryForm.reset();
+                    showToast(data.message, 'success');
+                    resultBox.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    showToast(data.error ? data.error.message : 'Failed to submit query.', 'error');
+                }
+            } catch (err) {
+                console.error(err);
+                // Fallback to normal form submit on network issue
+                queryForm.submit();
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<span>Submit Query</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>`;
+            }
+        });
+    }
+
+    // -------------------------------------------------------------
+    // Star Rating & Feedback Submission
+    // -------------------------------------------------------------
+    const starBtns = document.querySelectorAll('.star-btn');
+    const ratingInput = document.getElementById('feedback-rating-val');
+    const ratingText = document.getElementById('star-rating-text');
+    const ratingLabels = {
+        1: '1 Star - Needs Improvement',
+        2: '2 Stars - Fair',
+        3: '3 Stars - Good',
+        4: '4 Stars - Very Good',
+        5: '5 Stars - Excellent!'
+    };
+
+    function updateStars(val) {
+        if (!ratingInput) return;
+        ratingInput.value = val;
+        if (ratingText) {
+            ratingText.textContent = ratingLabels[val] || `${val} Stars`;
+        }
+        starBtns.forEach(btn => {
+            const r = parseInt(btn.getAttribute('data-rating'));
+            if (r <= val) {
+                btn.classList.add('text-amber-400');
+                btn.classList.remove('text-slate-600');
+            } else {
+                btn.classList.remove('text-amber-400');
+                btn.classList.add('text-slate-600');
+            }
+        });
+    }
+
+    starBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const val = parseInt(btn.getAttribute('data-rating'));
+            updateStars(val);
+        });
+    });
+
+    const feedbackForm = document.getElementById('student-feedback-form');
+    if (feedbackForm) {
+        feedbackForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById('feedback-submit-btn');
+            const name = document.getElementById('feedback-name').value.trim();
+            const email = document.getElementById('feedback-email').value.trim();
+            const rating = parseInt(ratingInput.value || 5);
+            const message = document.getElementById('feedback-message').value.trim();
+
+            if (!name) {
+                showToast('Please enter your name.', 'warning');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span>Saving...</span>`;
+
+            try {
+                const res = await fetch('/api/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        student_name: name,
+                        email: email,
+                        rating: rating,
+                        feedback_message: message
+                    })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    const resultBox = document.getElementById('feedback-ajax-result');
+                    const detailsEl = document.getElementById('feedback-ajax-details');
+                    detailsEl.textContent = `Your ${rating}-star rating has been successfully saved into our database. Thank you!`;
+                    resultBox.classList.remove('hidden');
+                    feedbackForm.reset();
+                    updateStars(5);
+                    showToast('Feedback submitted successfully!', 'success');
+                    resultBox.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    showToast(data.error ? data.error.message : 'Failed to submit feedback.', 'error');
+                }
+            } catch (err) {
+                console.error(err);
+                feedbackForm.submit();
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<span>Submit Feedback</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>`;
+            }
+        });
+    }
+</script>
+{% endblock %}

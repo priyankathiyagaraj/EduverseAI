@@ -1,0 +1,71 @@
+<footer class="bg-[#0F172A] text-slate-300 border-t border-slate-800 mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- Col 1: Brand & Purpose -->
+            <div class="md:col-span-2 space-y-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-lg shadow-2xs">
+                        E
+                    </div>
+                    <span class="text-xl font-bold text-white tracking-tight">EduVerse<span class="text-blue-400"> AI</span></span>
+                </div>
+                <p class="text-sm text-slate-400 max-w-md leading-relaxed">
+                    Smart College Recommendation System for Tamil Nadu. Built as an MCA final-year project to simplify higher education discovery through transparent data, multi-criteria comparison, and explainable recommendations.
+                </p>
+                <div class="pt-2 flex items-center space-x-3 text-xs text-slate-400">
+                    <span class="inline-flex items-center px-2 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                        Python 3.12 + Flask
+                    </span>
+                    <span class="inline-flex items-center px-2 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                        MySQL & SQLAlchemy
+                    </span>
+                    <span class="inline-flex items-center px-2 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                        Scikit-Learn CBF
+                    </span>
+                </div>
+            </div>
+
+            <!-- Col 2: Navigation Links -->
+            <div>
+                <h3 class="text-xs font-semibold text-white uppercase tracking-wider mb-4">Guidance & Discovery</h3>
+                <ul class="space-y-2.5 text-xs text-slate-400">
+                    <li><a href="{{ url_for('student.assessment') }}" class="text-blue-400 font-semibold hover:text-blue-300 transition">🎯 12th Course & Cutoff Guidance</a></li>
+                    <li><a href="{{ url_for('student.careers') }}" class="hover:text-blue-400 transition">🚀 Career Pathways & Higher Studies</a></li>
+                    <li><a href="{{ url_for('colleges.explore') }}" class="hover:text-blue-400 transition">Explore TN Colleges</a></li>
+                    <li><a href="{{ url_for('comparison.compare_page') }}" class="hover:text-blue-400 transition">Compare Colleges</a></li>
+                    <li><a href="{{ url_for('recommendations.recommendations_page') }}" class="hover:text-blue-400 transition">AI Recommendations</a></li>
+                    <li><a href="{{ url_for('analytics.analytics_page') }}" class="hover:text-blue-400 transition">Analytics</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 3: Student Support & Admin -->
+            <div>
+                <h3 class="text-xs font-semibold text-white uppercase tracking-wider mb-4">Project & Support</h3>
+                <ul class="space-y-2.5 text-xs text-slate-400">
+                    <li><a href="{{ url_for('student.contact') }}" class="hover:text-blue-400 transition font-medium">📬 Contact & Project Team</a></li>
+                    <li><a href="{{ url_for('main.about') }}" class="hover:text-blue-400 transition">About EduVerse AI</a></li>
+                    <li><a href="{{ url_for('main.about') }}#feedback-section" class="hover:text-blue-400 transition">Rate Platform / Give Feedback</a></li>
+                    <li><a href="{{ url_for('main.my_queries') }}" class="hover:text-blue-400 transition">My Submitted Queries</a></li>
+                    <li><a href="{{ url_for('auth.login_page') }}" class="hover:text-blue-400 transition flex items-center space-x-1">
+                        <span>Admin Console Sign In</span>
+                        <span class="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-blue-300 border border-slate-700">Staff</span>
+                    </a></li>
+                </ul>
+                <div class="mt-4 pt-3 border-t border-slate-800 text-xs text-slate-400">
+                    <p class="font-semibold text-slate-300">Project Development Team (MCA):</p>
+                    <p class="mt-0.5">R. Priyadharshini (9525621125)</p>
+                    <p>T. Priyanka (9525621126)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-slate-800 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4 text-center sm:text-left">
+            <p>&copy; 2026 EduVerse AI — Department of Master of Computer Applications (MCA). R. Priyadharshini & T. Priyanka.</p>
+            <div class="flex flex-wrap gap-x-4 gap-y-2 mt-2 sm:mt-0 justify-center sm:justify-end">
+                <span>All 38 TN Districts</span>
+                <span>Verified Official Websites</span>
+                <span>Gemini AI Counselor</span>
+            </div>
+        </div>
+    </div>
+</footer>

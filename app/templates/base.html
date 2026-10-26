@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50 text-slate-900 antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{% block title %}EduVerse AI - Smart College Recommendation System for Tamil Nadu{% endblock %}</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#1E3A8A',    /* Dark Blue */
+                        secondary: '#2563EB',  /* Blue */
+                        softblue: '#EFF6FF',   /* Soft Blue Section */
+                        accent: '#14B8A6',     /* Subtle Teal Accent */
+                        brand: {
+                            50: '#EFF6FF',
+                            100: '#DBEAFE',
+                            200: '#BFDBFE',
+                            500: '#3B82F6',
+                            600: '#2563EB',
+                            700: '#1D4ED8',
+                            800: '#1E40AF',
+                            900: '#1E3A8A',
+                            950: '#0F172A',
+                        }
+                    },
+                    boxShadow: {
+                        'saas': '0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.04)',
+                        'saas-hover': '0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Custom Accessible Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <!-- Leaflet CSS & JS for Maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="flex flex-col min-h-full bg-slate-50 text-slate-900 antialiased overflow-x-hidden">
+    <!-- Navbar Component -->
+    {% include 'components/navbar.html' %}
+
+    <!-- Flash Messages Container -->
+    <div id="flash-container" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 w-full">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-3 p-4 rounded-xl flex items-center justify-between shadow-xs {{ 'bg-emerald-50 text-emerald-800 border border-emerald-200' if category == 'success' else 'bg-rose-50 text-rose-800 border border-rose-200' if category == 'error' else 'bg-amber-50 text-amber-800 border border-amber-200' if category == 'warning' else 'bg-blue-50 text-blue-800 border border-blue-200' }}" role="alert">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-sm font-medium">{{ message }}</span>
+                        </div>
+                        <button type="button" onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-700 p-1">
+                            &times;
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Toast Notification Overlay -->
+    <div id="toast-overlay" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-3 pointer-events-none"></div>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer Component -->
+    {% include 'components/footer.html' %}
+
+    <!-- AI Education Counselor Floating Widget & Modal -->
+    {% include 'components/ai_counselor_modal.html' %}
+
+    <!-- Common Utility JS -->
+    <script>
+        // Mobile navigation toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (menuBtn && mobileMenu) {
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // Global Toast Notification Helper
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-overlay');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = `pointer-events-auto px-4 py-3 rounded-xl shadow-md border text-sm font-medium transition-all duration-300 transform translate-y-2 flex items-center space-x-3 ${
+                type === 'success' ? 'bg-white border-emerald-200 text-emerald-800 shadow-emerald-50' :
+                type === 'error' ? 'bg-white border-rose-200 text-rose-800 shadow-rose-50' :
+                type === 'warning' ? 'bg-white border-amber-200 text-amber-800 shadow-amber-50' :
+                'bg-white border-blue-200 text-blue-900 shadow-blue-50'
+            }`;
+            toast.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600 ml-2">&times;</button>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2');
+            }, 10);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // CSRF Token Helper for fetch requests
+        function getCsrfToken() {
+            const meta = document.querySelector('meta[name="csrf-token"]');
+            return meta ? meta.getAttribute('content') : '';
+        }
+
+        // Global Compare College Toggle
+        async function toggleCompare(collegeId, collegeName) {
+            try {
+                const res = await fetch('/api/compare', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken()
+                    },
+                    body: JSON.stringify({ college_id: collegeId })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    // Update badges
+                    const countBadge = document.getElementById('nav-compare-count');
+                    if (countBadge) {
+                        countBadge.textContent = data.compare_count;
+                        if (data.compare_count > 0) {
+                            countBadge.className = 'inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold rounded-full bg-blue-600 text-white';
+                        } else {
+                            countBadge.className = 'inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold rounded-full bg-slate-200 text-slate-700';
+                        }
+                    }
+                    showToast(data.message, 'success');
+                } else {
+                    showToast(data.error ? data.error.message : 'Unable to update comparison', 'warning');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Network error while updating comparison', 'error');
+            }
+        }
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

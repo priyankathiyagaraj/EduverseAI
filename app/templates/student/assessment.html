@@ -1,0 +1,309 @@
+{% extends 'base.html' %}
+
+{% block title %}12th Standard Assessment & Guidance - EduVerse AI{% endblock %}
+
+{% block content %}
+<div class="bg-[#F8FAFC] min-h-screen py-10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Header -->
+        <div class="text-center max-w-3xl mx-auto mb-10">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs mb-3">
+                🎯 12th Course & College Advisory Engine
+            </span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-[#1E3A8A] tracking-tight">
+                Course, Cutoff & College Assessment
+            </h1>
+            <p class="mt-3 text-slate-600 text-sm sm:text-base leading-relaxed">
+                Enter your 12th standard academic marks and interests. EduVerse AI computes your official TNEA cutoff, evaluates your academic standing, and guides you to suitable undergraduate degrees and Tamil Nadu colleges.
+            </p>
+        </div>
+
+        <form method="POST" action="{{ url_for('student.assessment') }}" id="assessment-form" class="space-y-8">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <!-- Step 1: Stream Selection -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-2xs">
+                <div class="flex items-center space-x-3 mb-6">
+                    <span class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-2xs">1</span>
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900">Select Your 12th Academic Stream</h2>
+                        <p class="text-xs text-slate-500">Choose the stream you pursued in your Higher Secondary examination.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-stretch">
+                    {% for st in streams %}
+                    <label class="stream-card h-full relative border-2 rounded-2xl p-4 cursor-pointer transition-all flex flex-col justify-between hover:border-blue-300 {% if (profile and profile.stream == st.id) or (loop.first and not profile) %}border-blue-600 bg-blue-50/50{% else %}border-slate-200 bg-white{% endif %}">
+                        <input type="radio" name="stream" value="{{ st.id }}" class="sr-only stream-radio" {% if (profile and profile.stream == st.id) or (loop.first and not profile) %}checked{% endif %} onchange="handleStreamChange('{{ st.id }}')">
+                        <div>
+                            <div class="text-2xl mb-2">
+                                {% if st.id == 'Science' %}🔬{% elif st.id == 'Commerce' %}📊{% elif st.id == 'Arts' %}🎨{% else %}🛠️{% endif %}
+                            </div>
+                            <div class="font-bold text-sm text-slate-900">{{ st.name }}</div>
+                            <p class="text-xs text-slate-600 mt-1.5 leading-snug">{{ st.description }}</p>
+                        </div>
+                        <div class="mt-4 pt-2 border-t border-slate-100 flex items-center text-xs font-semibold text-blue-600 stream-select-label">
+                            {% if (profile and profile.stream == st.id) or (loop.first and not profile) %}✓ Selected{% else %}Select Stream{% endif %}
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Step 2: Subject Marks & Live Cutoff Calculator -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-2xs">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-100 gap-4 mb-6">
+                    <div class="flex items-center space-x-3">
+                        <span class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-2xs">2</span>
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-900">Enter Your Subject Marks (out of 100)</h2>
+                            <p class="text-xs text-slate-500">Provide marks to compute aggregate percentage and engineering cutoff.</p>
+                        </div>
+                    </div>
+
+                    <!-- Live Academic Summary Badge -->
+                    <div class="flex items-center space-x-3 bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2 text-xs">
+                        <div>
+                            <span class="text-slate-500 block">Total Marks:</span>
+                            <span id="live-total-marks" class="font-extrabold text-slate-900 text-sm">0 / 400</span>
+                        </div>
+                        <div class="h-6 w-px bg-slate-200"></div>
+                        <div>
+                            <span class="text-slate-500 block">Percentage:</span>
+                            <span id="live-percentage" class="font-extrabold text-teal-600 text-sm">0.0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subject Rows Container -->
+                <div id="subject-rows-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Populated dynamically via JavaScript based on chosen stream -->
+                </div>
+
+                <!-- Live TNEA Engineering Cutoff Card (Clean Soft Blue SaaS Box) -->
+                <div id="cutoff-preview-box" class="mt-6 p-5 rounded-2xl bg-[#EFF6FF] border border-blue-200">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-base font-bold text-[#1E3A8A]">⚙️ TNEA Cutoff Guidance</span>
+                                <span class="bg-blue-200/70 text-blue-800 text-[11px] font-bold px-2 py-0.5 rounded-full">Engineering Metric</span>
+                            </div>
+                            <p class="text-xs text-slate-700 mt-1 max-w-xl">
+                                Calculated using formula: <code class="bg-white border border-blue-200 px-1.5 py-0.5 rounded font-mono text-blue-900 font-semibold">Mathematics/2 + Physics/4 + Chemistry/4</code>
+                            </p>
+                        </div>
+                        <div class="flex flex-wrap sm:flex-nowrap items-baseline gap-3 shrink-0">
+                            <div class="text-left sm:text-right">
+                                <span class="text-xs text-slate-600 block">Calculated Cutoff:</span>
+                                <span id="live-cutoff-value" class="text-2xl font-black text-[#1E3A8A]">0.00</span>
+                                <span class="text-xs text-blue-600 font-medium">/ 100</span>
+                            </div>
+                            <div class="text-left sm:text-right pl-3 border-l border-blue-200">
+                                <span class="text-xs text-slate-600 block">200-Scale (TN):</span>
+                                <span id="live-200-cutoff" class="text-lg font-extrabold text-blue-700">0.00</span>
+                                <span class="text-xs text-blue-600 font-medium">/ 200</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-[11px] text-slate-600 border-t border-blue-200/60 pt-2">
+                        💡 <em>Note: Official TNEA seat allotment cutoffs depend on annual counseling rank lists published by the Directorate of Technical Education, Tamil Nadu.</em>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Fields of Interest -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-2xs">
+                <div class="flex items-center space-x-3 mb-6">
+                    <span class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-2xs">3</span>
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900">Select Your Key Interests & Passions</h2>
+                        <p class="text-xs text-slate-500">Select up to 5 domains that excite you the most.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3">
+                    {% for interest in interests %}
+                    <label class="interest-pill border border-slate-200 hover:border-blue-300 rounded-2xl p-3 cursor-pointer transition-all flex items-center space-x-2.5 bg-slate-50/50 hover:bg-blue-50/30">
+                        <input type="checkbox" name="interests[]" value="{{ interest.id }}" class="interest-checkbox rounded text-blue-600 focus:ring-blue-500 w-4 h-4 border-slate-300">
+                        <span class="text-lg">{{ interest.icon }}</span>
+                        <span class="text-xs font-semibold text-slate-800">{{ interest.label }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Step 4: Location, College & Budget Preferences -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-2xs">
+                <div class="flex items-center space-x-3 mb-6">
+                    <span class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-2xs">4</span>
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900">College & Location Preferences</h2>
+                        <p class="text-xs text-slate-500">Help us filter colleges with verified official websites across Tamil Nadu.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <div>
+                        <label for="preferred_district" class="block text-xs font-semibold text-slate-700 mb-1.5">Preferred District</label>
+                        <select id="preferred_district" name="preferred_district" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer">
+                            <option value="">-- All 38 Tamil Nadu Districts --</option>
+                            {% for d in districts %}
+                            <option value="{{ d }}" {% if profile and profile.preferred_district == d %}selected{% endif %}>{{ d }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="college_preference" class="block text-xs font-semibold text-slate-700 mb-1.5">Institution Type</label>
+                        <select id="college_preference" name="college_preference" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer">
+                            <option value="all">Any Institution Type</option>
+                            <option value="Government">Government Colleges</option>
+                            <option value="Aided">Government-Aided Colleges</option>
+                            <option value="Self-Financing">Self-Financing / Private Colleges</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="budget_max" class="block text-xs font-semibold text-slate-700 mb-1.5">Max Annual Tuition Budget (₹)</label>
+                        <input type="number" id="budget_max" name="budget_max" placeholder="e.g. 75000 (leave blank for any)" step="5000" min="0" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 placeholder-slate-400">
+                    </div>
+
+                    <div class="sm:col-span-2 lg:col-span-3">
+                        <label for="career_interest" class="block text-xs font-semibold text-slate-700 mb-1.5">Specific Career Aspiration (Optional)</label>
+                        <input type="text" id="career_interest" name="career_interest" value="{{ profile.career_interest or '' if profile else '' }}" placeholder="e.g. Software Developer, Cyber Security Analyst, Chartered Accountant, Bank PO" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 placeholder-slate-400">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button Bar -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4">
+                <a href="{{ url_for('student.dashboard') }}" class="text-xs font-semibold text-slate-600 hover:text-slate-800 transition">
+                    &larr; Return to Dashboard
+                </a>
+                <button type="submit" id="submit-assessment-btn" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-base shadow-md shadow-blue-500/15 transition-all flex items-center justify-center space-x-2 cursor-pointer">
+                    <span>Evaluate & View Recommendations</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<script>
+    const STREAM_CONFIGS = {
+        'Science': ['Mathematics', 'Physics', 'Chemistry', 'Computer Science'],
+        'Commerce': ['Accountancy', 'Commerce', 'Economics', 'Business Mathematics'],
+        'Arts': ['History', 'Economics', 'Political Science', 'English Literature'],
+        'Vocational': ['Vocational Subject 1', 'Vocational Subject 2', 'English', 'General Mathematics']
+    };
+
+    let currentStream = "{{ profile.stream if profile and profile.stream else 'Science' }}";
+
+    function handleStreamChange(streamId) {
+        currentStream = streamId;
+        // Update cards styling
+        document.querySelectorAll('.stream-card').forEach(card => {
+            const radio = card.querySelector('.stream-radio');
+            const label = card.querySelector('.stream-select-label');
+            if (radio.value === streamId) {
+                card.classList.add('border-blue-600', 'bg-blue-50/50');
+                card.classList.remove('border-slate-200', 'bg-white');
+                if (label) label.textContent = '✓ Selected';
+            } else {
+                card.classList.remove('border-blue-600', 'bg-blue-50/50');
+                card.classList.add('border-slate-200', 'bg-white');
+                if (label) label.textContent = 'Select Stream';
+            }
+        });
+
+        renderSubjectInputs(streamId);
+    }
+
+    function renderSubjectInputs(streamId) {
+        const container = document.getElementById('subject-rows-container');
+        if (!container) return;
+
+        const subjects = STREAM_CONFIGS[streamId] || STREAM_CONFIGS['Science'];
+        container.innerHTML = '';
+
+        subjects.forEach(subj => {
+            const div = document.createElement('div');
+            div.className = 'bg-slate-50/80 p-3.5 rounded-2xl border border-slate-200 flex items-center justify-between space-x-3';
+            div.innerHTML = `
+                <div class="flex-1">
+                    <span class="text-xs font-bold text-slate-800 block">${subj}</span>
+                    <input type="hidden" name="subject_name[]" value="${subj}">
+                </div>
+                <div class="w-32 shrink-0">
+                    <div class="relative">
+                        <input type="number" name="subject_mark[]" min="0" max="100" step="1" placeholder="Mark" data-subject="${subj}" class="subject-mark-input w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-sm font-semibold text-slate-900 text-center focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" oninput="calculateLiveScores()">
+                        <span class="absolute right-2.5 top-2.5 text-xs text-slate-400 font-semibold">/100</span>
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+
+        calculateLiveScores();
+    }
+
+    function calculateLiveScores() {
+        const inputs = document.querySelectorAll('.subject-mark-input');
+        let total = 0;
+        let count = 0;
+        let marksMap = {};
+
+        inputs.forEach(input => {
+            const val = parseFloat(input.value);
+            const subj = input.getAttribute('data-subject');
+            if (!isNaN(val) && val >= 0 && val <= 100) {
+                total += val;
+                count++;
+                marksMap[subj] = val;
+            }
+        });
+
+        const totalEl = document.getElementById('live-total-marks');
+        const pctEl = document.getElementById('live-percentage');
+        const cutoffBox = document.getElementById('cutoff-preview-box');
+        const cutoffVal = document.getElementById('live-cutoff-value');
+        const cutoff200 = document.getElementById('live-200-cutoff');
+
+        if (totalEl) totalEl.textContent = `${total.toFixed(0)} / ${inputs.length * 100}`;
+        if (pctEl) {
+            const pct = inputs.length > 0 ? (total / inputs.length) : 0;
+            pctEl.textContent = `${pct.toFixed(1)}%`;
+        }
+
+        // TNEA Cutoff Preview
+        // Formula: Maths/2 + Physics/4 + Chemistry/4
+        const maths = marksMap['Mathematics'] || marksMap['Business Mathematics'] || 0;
+        const physics = marksMap['Physics'] || 0;
+        const chemistry = marksMap['Chemistry'] || 0;
+
+        const formulaCutoff = (maths / 2.0) + (physics / 4.0) + (chemistry / 4.0);
+        const standard200 = maths + (physics / 2.0) + (chemistry / 2.0);
+
+        if (cutoffVal) cutoffVal.textContent = formulaCutoff.toFixed(2);
+        if (cutoff200) cutoff200.textContent = standard200.toFixed(2);
+
+        if (cutoffBox) {
+            if (currentStream === 'Science') {
+                cutoffBox.classList.remove('hidden');
+            } else {
+                cutoffBox.classList.remove('hidden');
+            }
+        }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        renderSubjectInputs(currentStream);
+    });
+</script>
+{% endblock %}

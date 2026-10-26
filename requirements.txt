@@ -1,0 +1,16 @@
+# EduVerse AI - Dependencies
+Flask==3.1.0
+Flask-SQLAlchemy==3.1.1
+Flask-Migrate==4.1.0
+Flask-WTF==1.2.2
+email-validator==2.2.0
+PyMySQL==1.1.1
+cryptography==44.0.2
+pandas==2.2.3
+numpy==2.2.3
+scikit-learn==1.6.1
+python-dotenv==1.0.1
+pytest==8.3.5
+Jinja2==3.1.5
+Werkzeug==3.1.3
+gunicorn==23.0.0

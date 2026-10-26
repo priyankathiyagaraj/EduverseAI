@@ -1,0 +1,313 @@
+{% extends 'base.html' %}
+
+{% block title %}Assessment & Guidance Report - EduVerse AI{% endblock %}
+
+{% block content %}
+<div class="bg-[#F8FAFC] min-h-screen py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Action Nav & Print Bar -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-6 gap-4">
+            <div class="flex items-center space-x-2 text-xs font-semibold text-blue-600 uppercase tracking-wider">
+                <a href="{{ url_for('student.dashboard') }}" class="hover:underline">Dashboard</a>
+                <span>&rsaquo;</span>
+                <a href="{{ url_for('student.assessment') }}" class="hover:underline">Assessment</a>
+                <span>&rsaquo;</span>
+                <span class="text-slate-600">Guidance Report</span>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button type="button" onclick="window.print()" class="px-4 py-2 rounded-xl bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-semibold shadow-2xs flex items-center space-x-1.5 transition-colors cursor-pointer">
+                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    <span>Print Report</span>
+                </button>
+                <button type="button" onclick="openAICounselor('Can you analyze my assessment results and give me personalized advice?')" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-2xs flex items-center space-x-1.5 transition-colors cursor-pointer">
+                    <span>🤖 Discuss with AI Counselor</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Report Hero Banner (Deep Navy SaaS Style) -->
+        <div class="bg-[#1E3A8A] rounded-3xl p-6 sm:p-10 text-white shadow-md mb-8 relative overflow-hidden border border-blue-900/50">
+            <div class="relative z-10">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/15 text-blue-100 border border-white/20 mb-3">
+                    📊 Personalized Evaluation Summary
+                </span>
+                <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
+                    Your 12th Academic & Career Advisory Report
+                </h1>
+                <p class="mt-2 text-blue-100/90 text-sm sm:text-base max-w-3xl leading-relaxed">
+                    Based on your stream, subject scores, and personal interests, EduVerse AI has synthesized the most viable degree choices, matched Tamil Nadu colleges with verified official websites, and charted your future career pathways.
+                </p>
+            </div>
+        </div>
+
+        <!-- Academic & Cutoff Summary Cards -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            
+            <!-- Left: Aggregate & Stream Card -->
+            <div class="h-full bg-white rounded-3xl p-6 border border-slate-200 shadow-2xs flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Academic Standing</span>
+                        <span class="text-xs px-2.5 py-1 rounded-full font-bold bg-blue-50 text-blue-700 border border-blue-200/60">
+                            {{ assessment.academic.stream or 'Science' }}
+                        </span>
+                    </div>
+                    <div class="mt-6 flex items-baseline space-x-4">
+                        <div>
+                            <span class="text-xs text-slate-500 block">Aggregate Percentage</span>
+                            <span class="text-4xl font-black text-teal-600">{{ assessment.academic.percentage }}%</span>
+                        </div>
+                        <div class="pl-4 border-l border-slate-200">
+                            <span class="text-xs text-slate-500 block">Total Marks</span>
+                            <span class="text-xl font-bold text-slate-800">{{ assessment.academic.total_marks }} / {{ assessment.academic.max_total }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subject Marks Breakdown -->
+                <div class="mt-6 pt-4 border-t border-slate-100">
+                    <span class="text-xs font-semibold text-slate-700 block mb-2">Subject Performance:</span>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        {% for subj, mark in assessment.academic.subject_marks.items() %}
+                        <div class="bg-slate-50 p-2 rounded-xl flex items-center justify-between border border-slate-200">
+                            <span class="text-slate-600 truncate mr-1">{{ subj }}</span>
+                            <span class="font-bold text-slate-900">{{ mark }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle & Right: TNEA Engineering Cutoff Card -->
+            <div class="lg:col-span-2 bg-white rounded-3xl p-6 border border-slate-200 shadow-2xs flex flex-col justify-between">
+                <div>
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-100 gap-2">
+                        <div>
+                            <h2 class="text-base font-bold text-[#1E3A8A] flex items-center space-x-2">
+                                <span>⚙️ Official TNEA Cutoff Guidance</span>
+                                <span class="text-xs px-2 py-0.5 rounded-full font-bold bg-blue-50 text-blue-700 border border-blue-200/60">Engineering Admissions</span>
+                            </h2>
+                            <p class="text-xs text-slate-500 mt-0.5">Calculated using the required TNEA formula</p>
+                        </div>
+                        <div class="flex items-baseline space-x-3">
+                            <div class="text-right">
+                                <span class="text-[11px] text-slate-500 block">Formula Cutoff:</span>
+                                <span class="text-3xl font-black text-[#1E3A8A]">{{ assessment.academic.tnea_cutoff.formula_cutoff }}</span>
+                                <span class="text-xs text-blue-600 font-semibold">/ 100</span>
+                            </div>
+                            <div class="text-right pl-3 border-l border-slate-200">
+                                <span class="text-[11px] text-slate-500 block">Standard (TN):</span>
+                                <span class="text-2xl font-bold text-blue-700">{{ assessment.academic.tnea_cutoff.standard_200_cutoff }}</span>
+                                <span class="text-xs text-blue-600 font-semibold">/ 200</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Formula Breakdown Visual -->
+                    <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        {% for comp_name, comp_data in assessment.academic.tnea_cutoff.breakdown.items() %}
+                        <div class="p-3.5 rounded-2xl bg-blue-50/60 border border-blue-200/70 text-xs">
+                            <div class="flex items-center justify-between text-blue-900 font-bold uppercase tracking-wider text-[11px]">
+                                <span>{{ comp_name }}</span>
+                                <span class="bg-white border border-blue-200 px-2 py-0.5 rounded-md shadow-2xs">{{ comp_data.mark }}/100</span>
+                            </div>
+                            <div class="mt-2 text-slate-700 font-mono text-[11px]">
+                                {{ comp_data.formula_text }}
+                            </div>
+                            <div class="mt-1 text-right font-extrabold text-[#1E3A8A] text-sm">
+                                + {{ comp_data.component }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Transparent Advisory Disclaimer -->
+                <div class="mt-4 p-3 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs leading-relaxed flex items-start space-x-2">
+                    <span class="text-base shrink-0">⚠️</span>
+                    <div>
+                        <strong class="font-bold text-amber-950">Important Admission Guidance:</strong>
+                        {{ assessment.academic.tnea_cutoff.disclaimer }}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Section 2: Top Recommended Courses -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-2xs mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-6 border-b border-slate-100 gap-3">
+                <div>
+                    <h2 class="text-xl font-bold text-[#1E3A8A]">Top Recommended Courses & Degrees</h2>
+                    <p class="text-xs sm:text-sm text-slate-600 mt-0.5">Ranked by academic alignment, subject affinity, and your chosen interest domains.</p>
+                </div>
+                <span class="text-xs text-blue-700 font-semibold bg-blue-50 px-3 py-1.5 rounded-full border border-blue-200/60">
+                    {{ assessment.recommended_courses|length }} Potential Degrees Identified
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6 items-stretch">
+                {% for crs in assessment.recommended_courses %}
+                <div class="h-full p-5 rounded-2xl border border-slate-200 hover:border-blue-300 bg-white hover:shadow-md transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <span class="text-[11px] font-bold uppercase tracking-wider text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200/60">{{ crs.category }}</span>
+                                <h3 class="text-lg font-bold text-slate-900 mt-1.5">{{ crs.course_name }}</h3>
+                            </div>
+                            <div class="text-right shrink-0">
+                                <span class="text-[10px] text-slate-500 uppercase font-semibold block">Suitability</span>
+                                <span class="text-lg font-extrabold text-blue-600">{{ crs.suitability_score }}%</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-600 mt-2.5 leading-relaxed">
+                            {{ crs.rationale }}
+                        </p>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                        <span class="text-slate-500">Stream: <strong class="text-slate-800">{{ crs.stream }}</strong></span>
+                        <a href="{{ url_for('student.careers', course=crs.course_name) }}" class="font-semibold text-blue-600 hover:text-blue-800 flex items-center">
+                            <span>Career Outlook & Skills</span>
+                            <span class="ml-1">&rarr;</span>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Section 3: Matched Colleges in Tamil Nadu with Official Websites -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-2xs mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-6 border-b border-slate-100 gap-3">
+                <div>
+                    <h2 class="text-xl font-bold text-[#1E3A8A]">Matched Colleges Across Tamil Nadu</h2>
+                    <p class="text-xs sm:text-sm text-slate-600 mt-0.5">Institutions matching your academic profile with genuine official college websites.</p>
+                </div>
+                <a href="{{ url_for('colleges.explore') }}" class="text-xs font-semibold text-blue-600 hover:text-blue-800">
+                    Explore all 1,120+ colleges &rarr;
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-6 items-stretch">
+                {% for col in assessment.matched_colleges %}
+                <div class="h-full p-5 rounded-2xl border border-slate-200 hover:border-blue-300 bg-white hover:shadow-md transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between text-[11px] text-slate-500 mb-2">
+                            <span class="font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200/60">{{ col.college_type }}</span>
+                            <span>📍 {{ col.district }}</span>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-sm leading-snug line-clamp-2" title="{{ col.name }}">
+                            {{ col.name }}
+                        </h3>
+                        {% if col.affiliation %}
+                        <p class="text-xs text-slate-500 mt-1 line-clamp-1">🏛️ {{ col.affiliation }}</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Official Website & Details Actions -->
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex flex-col space-y-2">
+                        {% if col.official_website %}
+                        <a href="{{ col.official_website }}" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center px-3.5 py-2 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-700 hover:text-teal-800 text-xs font-bold transition-colors border border-teal-200 shadow-2xs">
+                            <span>Visit Official Website</span>
+                            <svg class="w-3.5 h-3.5 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                        {% else %}
+                        <span class="text-center text-xs text-slate-400 italic py-1">Official website not available</span>
+                        {% endif %}
+
+                        <div class="flex items-center justify-between pt-1 text-xs">
+                            <a href="{{ url_for('colleges.college_detail', id=col.id) }}" class="text-blue-600 hover:text-blue-800 font-semibold">
+                                View College Profile &rarr;
+                            </a>
+                            <button type="button" onclick="toggleCompare({{ col.id }}, '{{ col.name|replace("'", "\\'") }}')" class="text-slate-600 hover:text-slate-800 font-medium cursor-pointer">
+                                + Compare
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Section 4: Career Pathways, Higher Studies & Skills -->
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-2xs mb-8">
+            <div class="pb-6 border-b border-slate-100">
+                <h2 class="text-xl font-bold text-[#1E3A8A]">Career Pathways & Future Opportunities</h2>
+                <p class="text-xs sm:text-sm text-slate-600 mt-0.5">Explore what comes after your undergraduate degree: career roles, higher education, and key skills to develop.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
+                <!-- 1. Possible Careers -->
+                <div class="h-full bg-blue-50/50 p-5 rounded-2xl border border-blue-100 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-2 text-[#1E3A8A] font-bold text-sm mb-3">
+                            <span>💼</span>
+                            <span>Possible Career Roles</span>
+                        </div>
+                        <ul class="space-y-2 text-xs text-slate-700">
+                            {% for career in assessment.career_pathways.possible_careers %}
+                            <li class="flex items-center space-x-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                                <span>{{ career }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 2. Higher Studies -->
+                <div class="h-full bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-2 text-[#1E3A8A] font-bold text-sm mb-3">
+                            <span>🎓</span>
+                            <span>Higher Study Pathways</span>
+                        </div>
+                        <ul class="space-y-2 text-xs text-slate-700">
+                            {% for study in assessment.career_pathways.higher_studies %}
+                            <li class="flex items-center space-x-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                                <span>{{ study }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 3. Key Skills to Develop -->
+                <div class="h-full bg-teal-50/50 p-5 rounded-2xl border border-teal-100 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-2 text-teal-900 font-bold text-sm mb-3">
+                            <span>🛠️</span>
+                            <span>Key Skills to Build</span>
+                        </div>
+                        <ul class="space-y-2 text-xs text-slate-700">
+                            {% for skill in assessment.career_pathways.key_skills %}
+                            <li class="flex items-center space-x-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                                <span>{{ skill }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Next Actions Bar (Navy Banner) -->
+        <div class="bg-[#1E3A8A] rounded-3xl p-6 sm:p-8 text-white shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border border-blue-900/50">
+            <div>
+                <h3 class="text-lg font-bold text-white">Have Specific Questions About Admissions?</h3>
+                <p class="text-xs sm:text-sm text-blue-100 mt-1">Our AI Counselor is trained on Tamil Nadu higher education to guide your next decision.</p>
+            </div>
+            <div class="flex items-center space-x-3 shrink-0">
+                <button type="button" onclick="openAICounselor('Based on my results, which college should I prioritize?')" class="px-5 py-3 rounded-xl bg-white text-[#1E3A8A] hover:bg-blue-50 font-bold text-xs shadow-2xs transition-all cursor-pointer">
+                    Talk to AI Counselor &rarr;
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

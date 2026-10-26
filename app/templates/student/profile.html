@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}My Student Profile - EduVerse AI{% endblock %}
+
+{% block content %}
+<div class="bg-[#F8FAFC] min-h-screen py-10">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center space-x-2 text-xs font-semibold text-blue-600 uppercase tracking-wider mb-1">
+                <a href="{{ url_for('student.dashboard') }}" class="hover:underline">Dashboard</a>
+                <span>&rsaquo;</span>
+                <span class="text-slate-600">Student Profile</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-[#1E3A8A]">Student Academic & Preference Profile</h1>
+            <p class="text-sm text-slate-600 mt-1">Keep your details up to date to receive tailored course, college, and career suggestions.</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-2xs">
+            <form method="POST" action="{{ url_for('student.profile') }}" class="space-y-8">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <!-- Section 1: Basic Account Information -->
+                <div>
+                    <h2 class="text-base font-bold text-slate-900 flex items-center space-x-2 pb-3 border-b border-slate-100">
+                        <span class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold border border-blue-100">1</span>
+                        <span>Basic Information</span>
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5">
+                        <div>
+                            <label for="name" class="block text-xs font-semibold text-slate-700 mb-1.5">Full Name</label>
+                            <input type="text" id="name" name="name" value="{{ user.name }}" required class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-xs font-semibold text-slate-700 mb-1.5">Email Address</label>
+                            <input type="email" id="email" value="{{ user.email }}" disabled class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-500 cursor-not-allowed">
+                            <span class="text-[11px] text-slate-400 mt-0.5 block">Email address cannot be modified</span>
+                        </div>
+                        <div>
+                            <label for="phone" class="block text-xs font-semibold text-slate-700 mb-1.5">Contact Phone</label>
+                            <input type="tel" id="phone" name="phone" value="{{ profile.phone or '' }}" placeholder="e.g. 9876543210" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 placeholder-slate-400">
+                        </div>
+                        <div>
+                            <label for="location" class="block text-xs font-semibold text-slate-700 mb-1.5">City / Hometown</label>
+                            <input type="text" id="location" name="location" value="{{ profile.location or '' }}" placeholder="e.g. Salem, Trichy, Chennai" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 placeholder-slate-400">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: 12th Academic Details -->
+                <div>
+                    <h2 class="text-base font-bold text-slate-900 flex items-center space-x-2 pb-3 border-b border-slate-100">
+                        <span class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold border border-blue-100">2</span>
+                        <span>12th Standard Academic Background</span>
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5">
+                        <div class="sm:col-span-2">
+                            <label for="school" class="block text-xs font-semibold text-slate-700 mb-1.5">School / Higher Secondary Institution</label>
+                            <input type="text" id="school" name="school" value="{{ profile.school or '' }}" placeholder="e.g. Government Higher Secondary School, St. Joseph's HSS" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 placeholder-slate-400">
+                        </div>
+                        <div>
+                            <label for="stream" class="block text-xs font-semibold text-slate-700 mb-1.5">12th Stream</label>
+                            <select id="stream" name="stream" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer">
+                                <option value="">-- Select 12th Stream --</option>
+                                {% for st in streams %}
+                                <option value="{{ st.id }}" {% if profile.stream == st.id %}selected{% endif %}>{{ st.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1.5">TNEA Cutoff / Academic Score</label>
+                            <div class="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 flex items-center justify-between">
+                                <span>Cutoff: <strong class="text-blue-700">{{ profile.tnea_cutoff or 'Not evaluated' }}</strong></span>
+                                <span>Total %: <strong class="text-teal-700">{{ profile.percentage ~ '%' if profile.percentage else 'N/A' }}</strong></span>
+                            </div>
+                            <span class="text-[11px] text-slate-400 mt-0.5 block">Updated automatically upon completing the 12th Assessment</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Preferences & Aspirations -->
+                <div>
+                    <h2 class="text-base font-bold text-slate-900 flex items-center space-x-2 pb-3 border-b border-slate-100">
+                        <span class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs font-bold border border-blue-100">3</span>
+                        <span>College & Career Aspirations</span>
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5">
+                        <div>
+                            <label for="preferred_course" class="block text-xs font-semibold text-slate-700 mb-1.5">Preferred Degree / Course</label>
+                            <input type="text" id="preferred_course" name="preferred_course" value="{{ profile.preferred_course or '' }}" placeholder="e.g. B.E. Computer Science, BCA, B.Com" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 placeholder-slate-400">
+                        </div>
+                        <div>
+                            <label for="preferred_district" class="block text-xs font-semibold text-slate-700 mb-1.5">Preferred Tamil Nadu District</label>
+                            <select id="preferred_district" name="preferred_district" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer">
+                                <option value="">-- All Districts --</option>
+                                {% for d in districts %}
+                                <option value="{{ d }}" {% if profile.preferred_district == d %}selected{% endif %}>{{ d }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="college_preference" class="block text-xs font-semibold text-slate-700 mb-1.5">College Type Preference</label>
+                            <select id="college_preference" name="college_preference" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer">
+                                <option value="all" {% if profile.college_preference == 'all' or not profile.college_preference %}selected{% endif %}>Any College Type</option>
+                                <option value="Government" {% if profile.college_preference == 'Government' %}selected{% endif %}>Government Institutions</option>
+                                <option value="Aided" {% if profile.college_preference == 'Aided' %}selected{% endif %}>Government-Aided</option>
+                                <option value="Self-Financing" {% if profile.college_preference == 'Self-Financing' %}selected{% endif %}>Self-Financing / Private</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="career_interest" class="block text-xs font-semibold text-slate-700 mb-1.5">Long-term Career Goal</label>
+                            <input type="text" id="career_interest" name="career_interest" value="{{ profile.career_interest or '' }}" placeholder="e.g. Software Engineer, Data Scientist, Chartered Accountant" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 placeholder-slate-400">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-6 border-t border-slate-100 flex items-center justify-between">
+                    <a href="{{ url_for('student.dashboard') }}" class="text-xs font-semibold text-slate-600 hover:text-slate-800 transition">
+                        &larr; Back to Dashboard
+                    </a>
+                    <button type="submit" class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-2xs transition-all cursor-pointer">
+                        Save Profile Changes
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

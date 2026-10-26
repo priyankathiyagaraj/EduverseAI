@@ -1,0 +1,179 @@
+<header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-2xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            
+            <!-- Brand Logo -->
+            <div class="flex items-center space-x-2.5 sm:space-x-3 shrink-0">
+                <a href="{{ url_for('main.index') }}" class="flex items-center space-x-2 sm:space-x-2.5 group">
+                    <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-blue-700 via-blue-800 to-blue-900 flex items-center justify-center text-white font-extrabold text-base sm:text-lg shadow-sm group-hover:from-blue-600 group-hover:to-blue-800 transition-all shrink-0">
+                        E
+                    </div>
+                    <div>
+                        <span class="text-base sm:text-xl font-extrabold text-slate-900 tracking-tight leading-none block">
+                            EduVerse<span class="text-blue-600"> AI</span>
+                        </span>
+                        <span class="text-[9px] sm:text-[10px] uppercase tracking-wider font-semibold text-slate-500 block leading-tight">
+                            Tamil Nadu Higher Ed
+                        </span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Primary Desktop Navigation -->
+            <nav class="hidden lg:flex items-center space-x-1 xl:space-x-1.5">
+                <a href="{{ url_for('main.index') }}" 
+                   class="px-2.5 py-1.5 rounded-lg text-xs xl:text-sm font-medium transition {{ 'bg-blue-50 text-blue-700 font-semibold border border-blue-100' if request.endpoint == 'main.index' else 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                    Home
+                </a>
+                <a href="{{ url_for('student.assessment') }}" 
+                   class="px-2.5 py-1.5 rounded-lg text-xs xl:text-sm font-medium transition flex items-center space-x-1 {{ 'bg-blue-50 text-blue-700 font-semibold border border-blue-100' if request.endpoint and 'assessment' in request.endpoint else 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                    <span class="text-xs">🎯</span>
+                    <span>12th Guidance</span>
+                </a>
+                <a href="{{ url_for('colleges.explore') }}" 
+                   class="px-2.5 py-1.5 rounded-lg text-xs xl:text-sm font-medium transition {{ 'bg-blue-50 text-blue-700 font-semibold border border-blue-100' if request.endpoint and 'colleges.explore' in request.endpoint else 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                    Explore Colleges
+                </a>
+                <a href="{{ url_for('comparison.compare_page') }}" 
+                   class="px-2.5 py-1.5 rounded-lg text-xs xl:text-sm font-medium transition flex items-center space-x-1.5 {{ 'bg-blue-50 text-blue-700 font-semibold border border-blue-100' if request.endpoint == 'comparison.compare_page' else 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                    <span>Compare</span>
+                    <span id="nav-compare-count" class="inline-flex items-center justify-center px-1.5 py-0.2 text-[11px] font-bold rounded-full {{ 'bg-blue-600 text-white' if compare_count > 0 else 'bg-slate-200 text-slate-700' }}">
+                        {{ compare_count }}
+                    </span>
+                </a>
+                <a href="{{ url_for('recommendations.recommendations_page') }}" 
+                   class="px-2.5 py-1.5 rounded-lg text-xs xl:text-sm font-medium transition flex items-center space-x-1.5 {{ 'bg-blue-50 text-blue-700 font-semibold border border-blue-100' if request.endpoint == 'recommendations.recommendations_page' else 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                    <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    <span>AI Recommend</span>
+                </a>
+                <a href="{{ url_for('student.careers') }}" 
+                   class="px-2.5 py-1.5 rounded-lg text-xs xl:text-sm font-medium transition {{ 'bg-blue-50 text-blue-700 font-semibold border border-blue-100' if request.endpoint and 'careers' in request.endpoint else 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                    Careers
+                </a>
+                <a href="{{ url_for('analytics.analytics_page') }}" 
+                   class="px-2.5 py-1.5 rounded-lg text-xs xl:text-sm font-medium transition {{ 'bg-blue-50 text-blue-700 font-semibold border border-blue-100' if request.endpoint == 'analytics.analytics_page' else 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                    Analytics
+                </a>
+                <a href="{{ url_for('colleges.map_page') }}" 
+                   class="px-2.5 py-1.5 rounded-lg text-xs xl:text-sm font-medium transition {{ 'bg-blue-50 text-blue-700 font-semibold border border-blue-100' if request.endpoint == 'colleges.map_page' else 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                    Campus Map
+                </a>
+                <a href="{{ url_for('student.contact') }}" 
+                   class="px-2.5 py-1.5 rounded-lg text-xs xl:text-sm font-medium transition {{ 'bg-blue-50 text-blue-700 font-semibold border border-blue-100' if request.endpoint and 'contact' in request.endpoint else 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                    Contact
+                </a>
+                <a href="{{ url_for('main.about') }}" 
+                   class="px-2.5 py-1.5 rounded-lg text-xs xl:text-sm font-medium transition {{ 'bg-blue-50 text-blue-700 font-semibold border border-blue-100' if request.endpoint == 'main.about' else 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                    About Us
+                </a>
+            </nav>
+
+            <!-- User / Authentication Actions -->
+            <div class="hidden lg:flex items-center space-x-2.5 shrink-0">
+                {% if current_user %}
+                    {% if current_user.role == 'admin' %}
+                        <a href="{{ url_for('admin.dashboard') }}" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-200 transition flex items-center space-x-1.5">
+                            <span>Admin Console</span>
+                            {% if pending_queries_count and pending_queries_count > 0 %}
+                                <span class="inline-flex items-center px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-rose-500 text-white shadow-xs">
+                                    {{ pending_queries_count }}
+                                </span>
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                    {% if current_user.role == 'student' %}
+                        <a href="{{ url_for('student.dashboard') }}" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200/80 transition flex items-center space-x-1.5">
+                            <span>🎓 Dashboard</span>
+                        </a>
+                        <a href="{{ url_for('main.my_queries') }}" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 transition flex items-center space-x-1.5 shadow-2xs">
+                            <span>💬 Queries</span>
+                        </a>
+                    {% endif %}
+                    <div class="flex items-center space-x-2.5 border-l border-slate-200 pl-3">
+                        <span class="text-xs font-semibold text-slate-800 truncate max-w-[120px]" title="{{ current_user.name }}">{{ current_user.name }}</span>
+                        <a href="{{ url_for('auth.logout') }}" class="text-xs text-rose-600 hover:text-rose-800 font-semibold py-1 px-2 rounded-lg hover:bg-rose-50 transition">
+                            Logout
+                        </a>
+                    </div>
+                {% else %}
+                    <a href="{{ url_for('auth.login_page') }}" class="text-xs xl:text-sm font-semibold text-slate-700 hover:text-blue-700 px-3 py-2 rounded-xl hover:bg-slate-50 transition">
+                        Sign In
+                    </a>
+                    <a href="{{ url_for('auth.register_page') }}" class="text-xs xl:text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl shadow-xs transition">
+                        Register
+                    </a>
+                {% endif %}
+            </div>
+
+            <!-- Mobile menu trigger -->
+            <div class="flex lg:hidden items-center space-x-2">
+                <a href="{{ url_for('comparison.compare_page') }}" class="relative p-2 text-slate-600 hover:text-slate-900" aria-label="Compare Colleges">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <span class="absolute top-1 right-1 px-1.5 py-0.2 text-[10px] font-bold rounded-full bg-blue-600 text-white">
+                        {{ compare_count }}
+                    </span>
+                </a>
+                <button type="button" id="mobile-menu-btn" class="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition" aria-label="Toggle navigation menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Mobile Drawer Navigation -->
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-1 shadow-md max-h-[82vh] overflow-y-auto">
+        <a href="{{ url_for('main.index') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50 {{ 'bg-blue-50 text-blue-700 font-semibold' if request.endpoint == 'main.index' else '' }}">Home</a>
+        <a href="{{ url_for('student.assessment') }}" class="block px-3 py-2 rounded-xl text-sm font-semibold text-blue-700 hover:bg-blue-50 {{ 'bg-blue-50' if request.endpoint and 'assessment' in request.endpoint else '' }}">🎯 12th Course & Cutoff Guidance</a>
+        <a href="{{ url_for('colleges.explore') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50 {{ 'bg-blue-50 text-blue-700 font-semibold' if request.endpoint and 'colleges.explore' in request.endpoint else '' }}">Explore Colleges</a>
+        <a href="{{ url_for('comparison.compare_page') }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50">
+            <span>Compare Colleges</span>
+            <span class="px-2 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700">{{ compare_count }}</span>
+        </a>
+        <a href="{{ url_for('recommendations.recommendations_page') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50 {{ 'bg-blue-50 text-blue-700 font-semibold' if request.endpoint == 'recommendations.recommendations_page' else '' }}">AI Recommendations</a>
+        <a href="{{ url_for('student.careers') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50 {{ 'bg-blue-50 text-blue-700 font-semibold' if request.endpoint and 'careers' in request.endpoint else '' }}">Career Pathways</a>
+        <a href="{{ url_for('analytics.analytics_page') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50 {{ 'bg-blue-50 text-blue-700 font-semibold' if request.endpoint == 'analytics.analytics_page' else '' }}">Analytics</a>
+        <a href="{{ url_for('colleges.map_page') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50 {{ 'bg-blue-50 text-blue-700 font-semibold' if request.endpoint == 'colleges.map_page' else '' }}">Campus Map</a>
+        <a href="{{ url_for('student.contact') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50 {{ 'bg-blue-50 text-blue-700 font-semibold' if request.endpoint and 'contact' in request.endpoint else '' }}">Contact Us</a>
+        <a href="{{ url_for('main.about') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50 {{ 'bg-blue-50 text-blue-700 font-semibold' if request.endpoint == 'main.about' else '' }}">About Us</a>
+        
+        <div class="border-t border-slate-200 pt-3 mt-2">
+            {% if current_user %}
+                <p class="px-3 text-xs text-slate-500 mb-2">Signed in as <span class="font-semibold text-slate-800">{{ current_user.name }}</span></p>
+                {% if current_user.role == 'admin' %}
+                    <a href="{{ url_for('admin.dashboard') }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-slate-800 hover:bg-slate-100">
+                        <span>Admin Dashboard</span>
+                        {% if pending_queries_count and pending_queries_count > 0 %}
+                            <span class="px-2 py-0.5 rounded-full text-xs font-bold bg-rose-500 text-white">
+                                {{ pending_queries_count }}
+                            </span>
+                        {% endif %}
+                    </a>
+                    <a href="{{ url_for('admin.admin_queries') }}" class="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-medium text-blue-700 hover:bg-blue-50">
+                        <span>Student Queries</span>
+                    </a>
+                {% endif %}
+                {% if current_user.role == 'student' %}
+                    <a href="{{ url_for('student.dashboard') }}" class="block px-3 py-2 rounded-xl text-sm font-semibold text-blue-700 hover:bg-blue-50">
+                        🎓 Student Dashboard
+                    </a>
+                    <a href="{{ url_for('main.my_queries') }}" class="block px-3 py-2 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50">
+                        💬 My Submitted Queries
+                    </a>
+                {% endif %}
+                <a href="{{ url_for('auth.logout') }}" class="block px-3 py-2 rounded-xl text-sm font-semibold text-rose-600 hover:bg-rose-50 mt-1">Logout</a>
+            {% else %}
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                    <a href="{{ url_for('auth.login_page') }}" class="text-center px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition">Sign In</a>
+                    <a href="{{ url_for('auth.register_page') }}" class="text-center px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition shadow-xs">Register</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</header>

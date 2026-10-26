@@ -1,0 +1,291 @@
+{% extends 'base.html' %}
+
+{% block title %}Compare Colleges Side-by-Side | EduVerse AI{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-6 border-b border-slate-200 gap-4">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-[#1E3A8A] tracking-tight">College Comparison Matrix</h1>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1">
+                Factual side-by-side analysis of up to 4 institutions. Objective decision support without subjective winner declarations.
+            </p>
+        </div>
+        <div class="flex items-center space-x-3">
+            {% if count > 0 %}
+                <button type="button" onclick="clearComparison()" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-white border border-slate-200 text-rose-600 hover:bg-rose-50 transition shadow-2xs cursor-pointer">
+                    Clear Comparison
+                </button>
+            {% endif %}
+            <a href="{{ url_for('colleges.explore') }}" class="px-4 py-2 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white shadow-2xs transition flex items-center space-x-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                <span>Add More Colleges</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Alert / Notice if < 2 colleges -->
+    {% if not is_ready %}
+        <div class="p-8 bg-white rounded-3xl border border-slate-200 shadow-2xs text-center max-w-xl mx-auto space-y-4">
+            <div class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto border border-blue-100">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800">
+                {% if count == 1 %}
+                    1 College Selected (Minimum 2 Required)
+                {% else %}
+                    No Colleges in Comparison Matrix
+                {% endif %}
+            </h3>
+            <p class="text-xs text-slate-500 leading-relaxed">
+                Select between 2 and 4 colleges to view their side-by-side comparative matrix of tuition fees, courses, facilities, and transparency audits.
+            </p>
+            <div class="pt-2">
+                <a href="{{ url_for('colleges.explore') }}" class="inline-flex items-center space-x-2 px-6 py-2.5 rounded-xl text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 transition shadow-2xs">
+                    <span>Browse Colleges in Explorer</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </a>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Comparison Table (when >= 1 college) -->
+    {% if count > 0 %}
+        <!-- Mobile Horizontal Swipe Tip -->
+        <div class="md:hidden flex items-center justify-between px-4 py-2.5 bg-blue-50/80 border border-blue-200/80 rounded-2xl text-xs text-blue-800 font-medium">
+            <span class="flex items-center space-x-1.5">
+                <span>👉</span>
+                <span>Swipe left/right to compare columns</span>
+            </span>
+            <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-blue-600 text-white">{{ count }} Colleges</span>
+        </div>
+
+        <div class="table-responsive bg-white rounded-3xl border border-slate-200 shadow-2xs">
+            <table class="w-full text-left border-collapse table-sticky-col">
+                <thead>
+                    <tr class="border-b border-slate-200 bg-slate-50/90">
+                        <th class="p-4 sm:p-5 text-xs font-bold uppercase tracking-wider text-slate-500 w-44 sm:w-52 min-w-[160px] sm:min-w-[200px]">
+                            Attribute
+                        </th>
+                        {% for col in colleges %}
+                            <th class="p-4 sm:p-5 text-left min-w-[220px] sm:min-w-[260px] max-w-xs border-l border-slate-200 align-top">
+                                <div class="flex items-start justify-between gap-2">
+                                    <div class="space-y-1">
+                                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200/60">
+                                            {{ col.college_type }}
+                                        </span>
+                                        <h3 class="text-sm font-bold text-slate-900 leading-tight">
+                                            <a href="{{ url_for('colleges.college_detail', id=col.id) }}" class="hover:text-blue-600 transition">
+                                                {{ col.name }}
+                                            </a>
+                                        </h3>
+                                    </div>
+                                    <button type="button"
+                                            onclick="removeComparison({{ col.id }})"
+                                            title="Remove from comparison"
+                                            class="p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-xs">
+                    <!-- Row: Location -->
+                    <tr>
+                        <td class="p-5 font-bold text-slate-700 bg-slate-50/50">Location</td>
+                        {% for col in colleges %}
+                            <td class="p-5 border-l border-slate-200 text-slate-800">
+                                {{ col.city }}, {{ col.district }}, {{ col.state }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+
+                    <!-- Row: Data Status -->
+                    <tr>
+                        <td class="p-5 font-bold text-slate-700 bg-slate-50/50">Data Status</td>
+                        {% for col in colleges %}
+                            <td class="p-5 border-l border-slate-200">
+                                {% with status=col.data_status %}
+                                    {% include 'components/data_status_badge.html' %}
+                                {% endwith %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+
+                    <!-- Row: Annual Tuition Fee Range -->
+                    <tr>
+                        <td class="p-5 font-bold text-slate-700 bg-slate-50/50">Annual Tuition Range</td>
+                        {% for col in colleges %}
+                            <td class="p-5 border-l border-slate-200">
+                                {% if col.min_fee is not none %}
+                                    <span class="font-extrabold text-sm text-slate-900">₹{{ "{:,.0f}".format(col.min_fee) }}</span>
+                                    {% if col.max_fee and col.max_fee > col.min_fee %}
+                                        <span class="text-slate-500 text-xs"> - ₹{{ "{:,.0f}".format(col.max_fee) }}</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="italic text-slate-400">Information not available</span>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+
+                    <!-- Row: Courses Offered -->
+                    <tr>
+                        <td class="p-5 font-bold text-slate-700 bg-slate-50/50">Cataloged Courses</td>
+                        {% for col in colleges %}
+                            <td class="p-5 border-l border-slate-200 space-y-2">
+                                {% if col.courses and col.courses|length > 0 %}
+                                    <ul class="space-y-1">
+                                        {% for crs in col.courses %}
+                                            <li class="flex items-center justify-between gap-1 text-[11px] bg-slate-50 p-1.5 rounded border border-slate-200/80">
+                                                <span class="font-semibold text-slate-800">{{ crs.course_name }}</span>
+                                                {% if crs.annual_fee is not none %}
+                                                    <span class="text-slate-600">₹{{ "{:,.0f}".format(crs.annual_fee) }}</span>
+                                                {% else %}
+                                                    <span class="italic text-slate-400">N/A</span>
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <span class="italic text-slate-400">No courses listed</span>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+
+                    <!-- Row: Campus Facilities Checklist -->
+                    <tr>
+                        <td class="p-5 font-bold text-slate-700 bg-slate-50/50">Campus Facilities</td>
+                        {% for col in colleges %}
+                            <td class="p-5 border-l border-slate-200">
+                                <div class="flex flex-wrap gap-1">
+                                    {% for fac in col.facilities %}
+                                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] bg-teal-50 text-teal-700 border border-teal-200/60">
+                                            ✓ {{ fac }}
+                                        </span>
+                                    {% endfor %}
+                                    {% if not col.facilities %}
+                                        <span class="italic text-slate-400">Information not available</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        {% endfor %}
+                    </tr>
+
+                    <!-- Row: Official Website -->
+                    <tr>
+                        <td class="p-5 font-bold text-slate-700 bg-slate-50/50">Official Website</td>
+                        {% for col in colleges %}
+                            <td class="p-5 border-l border-slate-200">
+                                {% if col.official_website_url or col.official_website %}
+                                    {% set comp_web = col.official_website or col.official_website_url %}
+                                    <div class="space-y-1">
+                                        <a href="{{ comp_web }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 transition border border-blue-200">
+                                            <span>Visit Official Website</span>
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                        </a>
+                                        {% if col.website_status == 'VERIFIED' %}
+                                            <div class="text-[10px] text-teal-700 font-medium flex items-center gap-1">
+                                                <span>✓ Verified Domain</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    <span class="inline-flex items-center text-xs text-slate-400 italic">
+                                        Official website not available
+                                    </span>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+
+                    <!-- Row: Information Source & Audit -->
+                    <tr>
+                        <td class="p-5 font-bold text-slate-700 bg-slate-50/50">Information Source</td>
+                        {% for col in colleges %}
+                            <td class="p-5 border-l border-slate-200">
+                                {% if col.source_url and col.source_url.startswith('http') %}
+                                    <a href="{{ col.source_url }}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline break-all text-[11px]">
+                                        {{ col.source_url }}
+                                    </a>
+                                {% else %}
+                                    <span class="text-slate-600 text-[11px]">{{ col.source_url or 'Official Institutional Records' }}</span>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+
+                    <!-- Row: Action Link -->
+                    <tr>
+                        <td class="p-5 font-bold text-slate-700 bg-slate-50/50">Full Profile</td>
+                        {% for col in colleges %}
+                            <td class="p-5 border-l border-slate-200">
+                                <a href="{{ url_for('colleges.college_detail', id=col.id) }}" class="inline-flex items-center space-x-1 font-semibold text-blue-600 hover:text-blue-800 transition">
+                                    <span>View College Profile</span>
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </a>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    async function removeComparison(collegeId) {
+        try {
+            const res = await fetch(`/api/compare/${collegeId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                }
+            });
+            const data = await res.json();
+            if (data.success) {
+                location.reload();
+            } else {
+                showToast(data.error ? data.error.message : 'Failed to remove', 'error');
+            }
+        } catch (err) {
+            console.error(err);
+            showToast('Network error while removing college', 'error');
+        }
+    }
+
+    async function clearComparison() {
+        try {
+            const res = await fetch('/api/compare/clear', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                }
+            });
+            const data = await res.json();
+            if (data.success) {
+                location.reload();
+            } else {
+                showToast(data.error ? data.error.message : 'Failed to clear', 'error');
+            }
+        } catch (err) {
+            console.error(err);
+            showToast('Network error while clearing matrix', 'error');
+        }
+    }
+</script>
+{% endblock %}
