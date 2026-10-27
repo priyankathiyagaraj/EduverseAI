@@ -17,7 +17,7 @@
                         Python 3.12 + Flask
                     </span>
                     <span class="inline-flex items-center px-2 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">
-                        MySQL & SQLAlchemy
+                        {{ db_backend | default('PostgreSQL') }} & SQLAlchemy
                     </span>
                     <span class="inline-flex items-center px-2 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">
                         Scikit-Learn CBF

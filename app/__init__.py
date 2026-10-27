@@ -66,11 +66,13 @@ def create_app(config_name=None):
                 pending_queries_count = StudentQuery.query.filter_by(status='PENDING').count()
             except Exception:
                 pending_queries_count = 0
+        db_backend = 'PostgreSQL' if 'postgresql' in str(db.engine.url) else ('MySQL' if 'mysql' in str(db.engine.url) else 'SQLite')
         return {
             'current_user': user,
             'compare_count': len(compare_list),
             'compare_list': compare_list,
-            'pending_queries_count': pending_queries_count
+            'pending_queries_count': pending_queries_count,
+            'db_backend': db_backend
         }
 
     @app.before_request
